@@ -10,6 +10,8 @@ import 'ai_tips.dart';
 import 'profile.dart';
 
 class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
   @override
   _MainScreenState createState() => _MainScreenState();
 }
@@ -18,10 +20,10 @@ class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
   final List<Widget> _pages = [
     const HomeScreen(),
-    DiscoverScreeen(),
-    NewPostScreen(),
-    AiTipsScreen(),
-    ProfileScreen(),
+    const DiscoverScreeen(),
+    const NewPostScreen(),
+    const AiTipsScreen(),
+    const ProfileScreen(),
   ];
 
   @override
@@ -68,7 +70,7 @@ class _MainScreenState extends State<MainScreen> {
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.add,
                 size: 30,
                 color: Colors.white,
