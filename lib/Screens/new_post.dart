@@ -70,7 +70,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
           alignment: Alignment.centerLeft,
           child: Text('New Post'),
         ),
-        backgroundColor: primaryColor,
+        backgroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
