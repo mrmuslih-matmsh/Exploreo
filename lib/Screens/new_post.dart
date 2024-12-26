@@ -63,6 +63,8 @@ class _NewPostScreenState extends State<NewPostScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: primaryColor,
       appBar: AppBar(
@@ -84,6 +86,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
                   height: 200,
                   width: double.infinity,
                   decoration: BoxDecoration(
+                    color: Colors.grey[200],
                     border: Border.all(color: Colors.grey),
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -101,6 +104,8 @@ class _NewPostScreenState extends State<NewPostScreen> {
                 decoration: const InputDecoration(
                   labelText: 'Title',
                   border: OutlineInputBorder(),
+                  filled: true,
+                  fillColor: Colors.white,
                 ),
               ),
               const SizedBox(height: 16),
@@ -120,6 +125,8 @@ class _NewPostScreenState extends State<NewPostScreen> {
                 decoration: const InputDecoration(
                   labelText: 'Select Category',
                   border: OutlineInputBorder(),
+                  filled: true,
+                  fillColor: Colors.white,
                 ),
               ),
               const SizedBox(height: 16),
@@ -129,12 +136,27 @@ class _NewPostScreenState extends State<NewPostScreen> {
                 decoration: const InputDecoration(
                   labelText: 'Description',
                   border: OutlineInputBorder(),
+                  filled: true,
+                  fillColor: Colors.white,
                 ),
               ),
               const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _submitPost,
-                child: const Text('Add Post'),
+              SizedBox(
+                width: screenWidth,
+                child: ElevatedButton(
+                  onPressed: _submitPost,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: secondaryColor,
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: const Text(
+                    'Add Post',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
               ),
             ],
           ),
