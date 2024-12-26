@@ -10,6 +10,6 @@ class AiTipsScreen extends StatefulWidget {
 class _AiTipsScreenState extends State<AiTipsScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return const Scaffold();
   }
 }

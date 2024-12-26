@@ -1,4 +1,3 @@
-import 'package:exploreo/Screens/home.dart';
 import 'package:exploreo/Screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:exploreo/Components/color.dart';
