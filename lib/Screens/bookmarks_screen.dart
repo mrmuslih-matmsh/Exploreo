@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:exploreo/Components/color.dart';
 
 // Bookmark Post Model
 class BookmarkPost {
@@ -37,8 +38,10 @@ class BookmarksScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: primaryColor,
       appBar: AppBar(
         title: const Text('Bookmarks'),
+        backgroundColor: primaryColor,
       ),
       body: ListView.builder(
         itemCount: bookmarkedPosts.length,
@@ -46,10 +49,18 @@ class BookmarksScreen extends StatelessWidget {
           final post = bookmarkedPosts[index];
 
           return Card(
-            margin: const EdgeInsets.all(8.0),
+            margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            color: Colors.white,
             child: ListTile(
               contentPadding: const EdgeInsets.all(10.0),
-              leading: Image.network(post.imageUrl, width: 50, height: 50),
+              leading: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child:
+                    Image.network(post.imageUrl, height: 60, fit: BoxFit.cover),
+              ),
               title: Text(post.title,
                   style: const TextStyle(fontWeight: FontWeight.bold)),
               subtitle: Column(
@@ -57,11 +68,13 @@ class BookmarksScreen extends StatelessWidget {
                 children: [
                   Text(post.category),
                   Text('Published: ${post.publishDate}',
-                      style: const TextStyle(color: Colors.grey)),
+                      style:
+                          const TextStyle(color: Color.fromARGB(255, 0, 0, 0))),
                 ],
               ),
               trailing: IconButton(
-                icon: const Icon(Icons.delete, color: Colors.red),
+                icon: const Icon(Icons.delete,
+                    color: Color.fromARGB(255, 0, 0, 0)),
                 onPressed: () => _showDeleteConfirmationDialog(context, index),
               ),
             ),

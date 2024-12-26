@@ -15,11 +15,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFCFCFC), // Background set to white
+      backgroundColor: primaryColor, // Background set to white
       appBar: AppBar(
         title: const Text('Profile', style: TextStyle(color: Colors.black)),
         centerTitle: true,
-        backgroundColor: const Color(0xFFFCFCFC),
+        backgroundColor: primaryColor,
         elevation: 0,
         iconTheme:
             const IconThemeData(color: Colors.black), // AppBar icons black
@@ -73,121 +73,73 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 50),
-            // Buttons at the bottom
-            Column(
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    // Navigate to Bookmarks screen
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BookmarksScreen(),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white, // White background
-                    side: const BorderSide(color: Colors.black, width: 1.0),
-                    elevation: 0, // No shadow
-                    minimumSize: const Size.fromHeight(50),
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+            const SizedBox(height: 30),
+            // Buttons Section
+            Expanded(
+              child: ListView(
+                children: [
+                  _buildProfileButton(
+                    icon: Icons.bookmark,
+                    label: 'Bookmarks',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BookmarksScreen(),
+                        ),
+                      );
+                    },
                   ),
-                  child: const Row(
-                    children: [
-                      Icon(Icons.bookmark, color: secondaryColor),
-                      SizedBox(width: 8),
-                      Text(
-                        'Bookmarks',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ],
+                  _buildProfileButton(
+                    icon: Icons.chat,
+                    label: 'Chat',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ChatScreen(),
+                        ),
+                      );
+                    },
                   ),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    // Navigate to Chat screen
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ChatScreen(),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white, // White background
-                    side: const BorderSide(color: Colors.black, width: 1.0),
-                    elevation: 0, // No shadow
-                    minimumSize: const Size.fromHeight(50),
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                  _buildProfileButton(
+                    icon: Icons.lock,
+                    label: 'Change Password',
+                    onPressed: () {
+                      // Navigate to Change Password Screen
+                    },
                   ),
-                  child: const Row(
-                    children: [
-                      Icon(Icons.chat, color: secondaryColor),
-                      SizedBox(width: 8),
-                      Text(
-                        'Chat',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ],
+                  _buildProfileButton(
+                    icon: Icons.post_add,
+                    label: 'My Posts',
+                    onPressed: () {
+                      // Navigate to My Posts Screen
+                    },
                   ),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    // Open Support Page
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white, // White background
-                    side: const BorderSide(color: Colors.black, width: 1.0),
-                    elevation: 0, // No shadow
-                    minimumSize: const Size.fromHeight(50),
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                  _buildProfileButton(
+                    icon: Icons.settings,
+                    label: 'Settings',
+                    onPressed: () {
+                      // Navigate to Settings Screen
+                    },
                   ),
-                  child: const Row(
-                    children: [
-                      Icon(Icons.support_agent, color: secondaryColor),
-                      SizedBox(width: 8),
-                      Text(
-                        'Support',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ],
+                  _buildProfileButton(
+                    icon: Icons.support_agent,
+                    label: 'Support',
+                    onPressed: () {
+                      // Open Support Page
+                    },
                   ),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    // Logout action
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white, // White background
-                    side: const BorderSide(color: Colors.black, width: 1.0),
-                    elevation: 0, // No shadow
-                    minimumSize: const Size.fromHeight(50),
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                  _buildProfileButton(
+                    icon: Icons.logout,
+                    label: 'Logout',
+                    onPressed: () {
+                      // Logout action
+                    },
                   ),
-                  child: const Row(
-                    children: [
-                      Icon(Icons.logout, color: secondaryColor),
-                      SizedBox(width: 8),
-                      Text(
-                        'Logout',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
+                ],
+              ),
             ),
-            const Spacer(),
             const Center(
               child: Text(
                 'App Version 1.0.0',
@@ -197,6 +149,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  // A reusable widget for creating profile buttons
+  Widget _buildProfileButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onPressed,
+  }) {
+    return Column(
+      children: [
+        ElevatedButton(
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white, // White background
+            side: const BorderSide(color: Colors.black, width: 1.0),
+            elevation: 0, // No shadow
+            minimumSize: const Size.fromHeight(50),
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10), // Rounded corners
+            ),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, color: secondaryColor),
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: const TextStyle(color: Colors.black),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+      ],
     );
   }
 }

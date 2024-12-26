@@ -15,10 +15,12 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     // Set a delay before navigating to the home screen
     Future.delayed(const Duration(seconds: 4), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => MainScreen()),
-      );
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MainScreen()),
+        );
+      }
     });
   }
 
