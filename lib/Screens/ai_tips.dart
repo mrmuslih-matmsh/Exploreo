@@ -19,6 +19,11 @@ class _AiTipsScreenState extends State<AiTipsScreen> {
   void initState() {
     super.initState();
     Gemini.init(apiKey: apiKey, enableDebugging: true);
+    _sendWelcomeMessage();
+  }
+
+  void _sendWelcomeMessage() {
+    _sendMessageToAI("Welcome to Exploreo AI Travel Assistant! How can I assist you with your travel-related questions today?");
   }
 
   void _sendMessage() async {
