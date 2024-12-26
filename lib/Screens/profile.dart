@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exploreo/Screens/bookmarks_screen.dart';
 import 'package:exploreo/Screens/chat_screen.dart';
-import 'package:exploreo/Screens/edit_profile_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:exploreo/Screens/edit_profile_screen.dart';
 import 'package:exploreo/Components/color.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -12,142 +14,215 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  String? userName;
+  String? userEmail;
+  String? profileImage;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    try {
+      final User? user = _auth.currentUser;
+      if (user != null) {
+        final DocumentSnapshot userDoc =
+            await _firestore.collection('users').doc(user.uid).get();
+
+        setState(() {
+          final data = userDoc.data() as Map<String, dynamic>?;
+          userName = data?['name'] ?? 'Guest User';
+          userEmail = data?['email'] ?? 'No email available';
+          profileImage = data?['profileImage'] ??
+              'https://via.placeholder.com/150'; // Default image
+        });
+      } else {
+        setState(() {
+          userName = 'Guest User';
+          userEmail = 'No email available';
+          profileImage = 'https://via.placeholder.com/150'; // Default image
+        });
+      }
+    } catch (e) {
+      print('Error loading user data: $e');
+      setState(() {
+        userName = 'Error';
+        userEmail = 'Error loading email';
+        profileImage = 'https://via.placeholder.com/150'; // Default image
+      });
+    }
+  }
+
+  Future<void> _logout() async {
+    final bool? confirmLogout = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirm Logout'),
+        content: const Text('Are you sure you want to logout?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Logout'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmLogout == true) {
+      try {
+        await _auth.signOut();
+        Navigator.pushReplacementNamed(
+            context, '/login'); // Redirect to login screen
+      } catch (e) {
+        print('Error during logout: $e');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: primaryColor, // Background set to white
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Profile', style: TextStyle(color: Colors.black)),
         centerTitle: true,
-        backgroundColor: primaryColor,
+        backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme:
-            const IconThemeData(color: Colors.black), // AppBar icons black
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // User Information Row
-            GestureDetector(
-              onTap: () {
-                // Navigate to Edit Profile Screen
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const EditProfileScreen(),
-                  ),
-                );
-              },
-              child: const Row(
+        child: userName == null
+            ? const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(secondaryColor),
+                ),
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(
-                    radius: 40,
-                    backgroundImage: NetworkImage(
-                      'https://via.placeholder.com/150', // Replace with user's image URL
-                    ),
-                  ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const EditProfileScreen(),
+                        ),
+                      );
+                    },
+                    child: Row(
                       children: [
-                        Text(
-                          'John Doe',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black, // Text color black
+                        CircleAvatar(
+                          radius: 40,
+                          backgroundImage: NetworkImage(profileImage!),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                userName!,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              Text(
+                                userEmail!,
+                                style: const TextStyle(color: Colors.black54),
+                              ),
+                            ],
                           ),
                         ),
-                        Text(
-                          'johndoe@example.com',
-                          style:
-                              TextStyle(color: Colors.black54), // Subtle black
+                        const Icon(Icons.arrow_forward_ios,
+                            color: Colors.black),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  // Buttons Section
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        _buildProfileButton(
+                          icon: Icons.bookmark,
+                          label: 'Bookmarks',
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BookmarksScreen(),
+                              ),
+                            );
+                          },
+                        ),
+                        _buildProfileButton(
+                          icon: Icons.chat,
+                          label: 'Chat',
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ChatScreen(),
+                              ),
+                            );
+                          },
+                        ),
+                        _buildProfileButton(
+                          icon: Icons.lock,
+                          label: 'Change Password',
+                          onPressed: () {
+                            // Navigate to Change Password Screen
+                          },
+                        ),
+                        _buildProfileButton(
+                          icon: Icons.post_add,
+                          label: 'My Posts',
+                          onPressed: () {
+                            // Navigate to My Posts Screen
+                          },
+                        ),
+                        _buildProfileButton(
+                          icon: Icons.settings,
+                          label: 'Settings',
+                          onPressed: () {
+                            // Navigate to Settings Screen
+                          },
+                        ),
+                        _buildProfileButton(
+                          icon: Icons.support_agent,
+                          label: 'Support',
+                          onPressed: () {
+                            // Open Support Page
+                          },
+                        ),
+                        _buildProfileButton(
+                          icon: Icons.logout,
+                          label: 'Logout',
+                          onPressed: _logout,
                         ),
                       ],
                     ),
                   ),
-                  Icon(Icons.arrow_forward_ios, color: Colors.black),
-                ],
-              ),
-            ),
-            const SizedBox(height: 30),
-            // Buttons Section
-            Expanded(
-              child: ListView(
-                children: [
-                  _buildProfileButton(
-                    icon: Icons.bookmark,
-                    label: 'Bookmarks',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BookmarksScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  _buildProfileButton(
-                    icon: Icons.chat,
-                    label: 'Chat',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ChatScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  _buildProfileButton(
-                    icon: Icons.lock,
-                    label: 'Change Password',
-                    onPressed: () {
-                      // Navigate to Change Password Screen
-                    },
-                  ),
-                  _buildProfileButton(
-                    icon: Icons.post_add,
-                    label: 'My Posts',
-                    onPressed: () {
-                      // Navigate to My Posts Screen
-                    },
-                  ),
-                  _buildProfileButton(
-                    icon: Icons.settings,
-                    label: 'Settings',
-                    onPressed: () {
-                      // Navigate to Settings Screen
-                    },
-                  ),
-                  _buildProfileButton(
-                    icon: Icons.support_agent,
-                    label: 'Support',
-                    onPressed: () {
-                      // Open Support Page
-                    },
-                  ),
-                  _buildProfileButton(
-                    icon: Icons.logout,
-                    label: 'Logout',
-                    onPressed: () {
-                      // Logout action
-                    },
+                  const Center(
+                    child: Text(
+                      'App Version 1.0.0',
+                      style: TextStyle(color: Colors.black54),
+                    ),
                   ),
                 ],
               ),
-            ),
-            const Center(
-              child: Text(
-                'App Version 1.0.0',
-                style: TextStyle(color: Colors.black54),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
