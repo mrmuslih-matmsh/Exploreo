@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "200395132100",
+    "project_id": "exploreo-bdee9",
+    "storage_bucket": "exploreo-bdee9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:200395132100:android:1a74d31aea0b7182618d91",
+        "android_client_info": {
+          "package_name": "com.example.exploreo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCM9Muc11oyWA3XAGlWhPOMGFV_IrS7Ryg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

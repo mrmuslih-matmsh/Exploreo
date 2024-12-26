@@ -10,6 +10,6 @@ class DiscoverScreeen extends StatefulWidget {
 class _DiscoverScreeenState extends State<DiscoverScreeen> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return Scaffold();
   }
 }

@@ -39,6 +39,12 @@ android {
     }
 }
 
+dependencies {
+    implementation 'com.google.firebase:firebase-analytics:21.2.0'
+}
+
 flutter {
     source = "../.."
 }
+
+apply plugin: 'com.google.gms.google-services'
