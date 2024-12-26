@@ -7,6 +7,7 @@ class FeaturedCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const FeaturedCard({
+    super.key,
     required this.imageUrl,
     required this.name,
     required this.location,
@@ -22,7 +23,7 @@ class FeaturedCard extends StatelessWidget {
       padding: const EdgeInsets.only(right: 16.0),
       child: GestureDetector(
         onTap: onTap,
-        child: Container(
+        child: SizedBox(
           width: cardWidth,
           height: cardHeight,
           child: Stack(
@@ -43,7 +44,8 @@ class FeaturedCard extends StatelessWidget {
                 left: 20,
                 child: Container(
                   width: cardWidth - 40,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   decoration: const BoxDecoration(
                     color: Color.fromRGBO(0, 0, 0, .5),
                     borderRadius: BorderRadius.all(

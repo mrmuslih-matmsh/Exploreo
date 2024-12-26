@@ -3,7 +3,7 @@ import 'package:exploreo/Models/travel.dart';
 
 class DetailView extends StatefulWidget {
   final int id;
-  const DetailView({Key? key, required this.id}) : super(key: key);
+  const DetailView({super.key, required this.id});
 
   @override
   State<DetailView> createState() => _DetailViewState();
@@ -13,7 +13,7 @@ class _DetailViewState extends State<DetailView> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    List<Travel> _travelList = Travel.getTravelItems();
+    List<Travel> travelList = Travel.getTravelItems();
 
     return Scaffold(
       body: Stack(
@@ -26,7 +26,7 @@ class _DetailViewState extends State<DetailView> {
               height: size.height,
               width: double.infinity,
               child: FittedBox(
-                child: Image.asset(_travelList[widget.id].imageUrl[0]),
+                child: Image.asset(travelList[widget.id].imageUrl[0]),
                 fit: BoxFit.cover,
               ),
             ),
@@ -96,7 +96,7 @@ class _DetailViewState extends State<DetailView> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        _travelList[widget.id].name,
+                        travelList[widget.id].name,
                         style: const TextStyle(
                             color: Colors.black,
                             fontSize: 30,
@@ -106,14 +106,14 @@ class _DetailViewState extends State<DetailView> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.star,  // Using the built-in star icon
-                            color: Colors.yellow,  // Star color
-                            size: 30,  // Icon size
+                          const Icon(
+                            Icons.star, // Using the built-in star icon
+                            color: Colors.yellow, // Star color
+                            size: 30, // Icon size
                           ),
                           Text(
-                            _travelList[widget.id].rating.toString(),
-                            style: TextStyle(
+                            travelList[widget.id].rating.toString(),
+                            style: const TextStyle(
                               fontSize: 16.0,
                             ),
                           ),
@@ -145,8 +145,7 @@ class _DetailViewState extends State<DetailView> {
                                 ),
                                 children: <TextSpan>[
                                   TextSpan(
-                                    text:
-                                    _travelList[widget.id].cost.toString(),
+                                    text: travelList[widget.id].cost.toString(),
                                     style: const TextStyle(
                                       color: Colors.black,
                                     ),
@@ -158,24 +157,26 @@ class _DetailViewState extends State<DetailView> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Icon(
-                            Icons.location_on,  // Using the location icon
-                            color: Colors.red,   // Icon color
-                            size: 20,            // Icon size
+                          const Icon(
+                            Icons.location_on, // Using the location icon
+                            color: Colors.red, // Icon color
+                            size: 20, // Icon size
                           ),
                           const SizedBox(
                             width: 5,
                           ),
                           RichText(
                             text: TextSpan(
-                              text: _travelList[widget.id].location,
+                              text: travelList[widget.id].location,
                               style: TextStyle(
                                 color: Colors.black87.withOpacity(.5),
                               ),
                               children: <TextSpan>[
                                 TextSpan(
                                   text: '(' +
-                                      _travelList[widget.id].distance.toString() +
+                                      travelList[widget.id]
+                                          .distance
+                                          .toString() +
                                       'km)',
                                   style: const TextStyle(
                                     color: Colors.black,
@@ -192,7 +193,7 @@ class _DetailViewState extends State<DetailView> {
                     height: 10,
                   ),
                   Text(
-                    _travelList[widget.id].description,
+                    travelList[widget.id].description,
                     style: const TextStyle(
                       color: Color(0xff686771),
                       fontWeight: FontWeight.w400,
@@ -208,15 +209,16 @@ class _DetailViewState extends State<DetailView> {
                     children: [
                       Container(
                         padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          border: Border.all(
+                            color: const Color(0xff8f294f),
+                          ),
+                        ),
                         child: Icon(
                           Icons.favorite_border,
                           color: Color(0xff8f294f),
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                          border: Border.all(
-                            color: Color(0xff8f294f),
-                          ),
                         ),
                       ),
                       const SizedBox(
@@ -225,6 +227,14 @@ class _DetailViewState extends State<DetailView> {
                       Expanded(
                         child: Container(
                           padding: const EdgeInsets.all(9),
+                          decoration: BoxDecoration(
+                            color: const Color(0xff8f294f),
+                            border: Border.all(
+                              color: const Color(0xff8f294f),
+                            ),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                          ),
                           child: const Center(
                             child: Text(
                               'Discover',
@@ -233,13 +243,6 @@ class _DetailViewState extends State<DetailView> {
                                 fontSize: 18.0,
                               ),
                             ),
-                          ),
-                          decoration: BoxDecoration(
-                            color: Color(0xff8f294f),
-                            border: Border.all(
-                              color: Color(0xff8f294f),
-                            ),
-                            borderRadius: const BorderRadius.all(Radius.circular(10)),
                           ),
                         ),
                       ),

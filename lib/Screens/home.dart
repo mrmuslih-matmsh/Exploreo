@@ -21,11 +21,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Icon(
+            Icon(
               Icons.menu, // Menu icon
               size: 30,
               color: secondaryColor,
@@ -33,25 +33,25 @@ class _HomeScreenState extends State<HomeScreen> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Icon(
+                Icon(
                   Icons.location_on,
                   size: 20,
                   color: secondaryColor,
                 ),
-                const SizedBox(
+                SizedBox(
                   width: 2,
                 ),
-                const Text(
+                Text(
                   'Sri Lanka',
                   style: TextStyle(color: secondaryColor, fontSize: 16.0),
                 ),
-                const Icon(
+                Icon(
                   Icons.keyboard_arrow_down,
                   color: secondaryColor,
                 )
               ],
             ),
-            const Icon(
+            Icon(
               Icons.notifications_none_rounded, // Notification icon
               size: 30,
               color: secondaryColor,
@@ -95,9 +95,9 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 34,
               ),
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
                   Text(
                     'Featured',
                     style: TextStyle(
@@ -152,9 +152,9 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 24,
               ),
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
                   Text(
                     'Explore Tours',
                     style: TextStyle(
@@ -216,9 +216,9 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 24,
               ),
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
                   Text(
                     'Food Connect',
                     style: TextStyle(
@@ -280,9 +280,9 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 24,
               ),
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
                   Text(
                     'Skill Swap',
                     style: TextStyle(

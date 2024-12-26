@@ -9,6 +9,7 @@ class ExploreTourCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const ExploreTourCard({
+    super.key,
     required this.imageUrl,
     required this.name,
     required this.location,
@@ -32,7 +33,7 @@ class ExploreTourCard extends StatelessWidget {
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
                 blurRadius: 8,
-                offset: Offset(0, 4),
+                offset: const Offset(0, 4),
               ),
             ],
           ),
@@ -40,7 +41,7 @@ class ExploreTourCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.vertical(
+                borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(15), // Rounded top corners
                 ),
                 child: Image.network(
