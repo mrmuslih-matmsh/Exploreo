@@ -188,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   return Container(
                     margin: const EdgeInsets.only(top: 16),
-                    height: size.height * .3,
+                    height: size.height * .275,
                     child: ListView.builder(
                       itemCount: exploreToursData.length,
                       physics: const BouncingScrollPhysics(),
