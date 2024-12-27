@@ -1,3 +1,4 @@
+import 'package:exploreo/Components/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 
@@ -81,12 +82,12 @@ class _AiTipsScreenState extends State<AiTipsScreen> {
             mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
             children: [
               if (!isUser)
-                CircleAvatar(
+                const CircleAvatar(
                   backgroundImage: AssetImage("assets/exploreo_icon_bg.png"),
                 ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Container(
-                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 decoration: BoxDecoration(
                   color: isUser ? Colors.blue : Colors.grey[200],
                   borderRadius: BorderRadius.circular(20),
@@ -100,10 +101,10 @@ class _AiTipsScreenState extends State<AiTipsScreen> {
                   ),
                 ),
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               if (isUser)
-                CircleAvatar(
-                  backgroundImage: AssetImage("assets/pro.png"),
+                const CircleAvatar(
+                  backgroundImage: AssetImage("assets/user_pro.png"),
                 ),
             ],
           ),
@@ -116,7 +117,7 @@ class _AiTipsScreenState extends State<AiTipsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("AI Travel Assistant"),
+        title: const Text("AI Travel Assistant"),
       ),
       body: Column(
         children: [
@@ -131,16 +132,16 @@ class _AiTipsScreenState extends State<AiTipsScreen> {
                     decoration: InputDecoration(
                       hintText: "Ask a travel-related question...",
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                     ),
                   ),
                 ),
                 IconButton(
                   icon: _isLoading
-                      ? CircularProgressIndicator()
-                      : Icon(Icons.send),
+                      ? const CircularProgressIndicator(color: secondaryColor,)
+                      : const Icon(Icons.send),
                   onPressed: _isLoading ? null : _sendMessage,
                 ),
               ],
