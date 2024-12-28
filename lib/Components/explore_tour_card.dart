@@ -56,12 +56,15 @@ class ExploreTourCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Title Text with Ellipsis overflow
                     Text(
                       name,
                       style: const TextStyle(
                         fontSize: 16,
                         fontFamily: 'PoppinsSemiBold',
                       ),
+                      maxLines: 1, // Restrict to one line
+                      overflow: TextOverflow.ellipsis, // Show ellipsis on overflow
                     ),
                     const SizedBox(height: 5),
                     Row(
@@ -72,6 +75,7 @@ class ExploreTourCard extends StatelessWidget {
                           size: 16,
                         ),
                         const SizedBox(width: 4),
+                        // Location Text with Ellipsis overflow
                         Expanded(
                           child: Text(
                             location,
@@ -80,7 +84,7 @@ class ExploreTourCard extends StatelessWidget {
                               color: Colors.grey,
                               fontFamily: 'PoppinsMedium',
                             ),
-                            overflow: TextOverflow.ellipsis,
+                            overflow: TextOverflow.ellipsis, // Show ellipsis on overflow
                           ),
                         ),
                       ],

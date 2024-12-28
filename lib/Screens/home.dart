@@ -109,7 +109,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
-                    .collection('travels')
+                    .collection('posts')
+                    .where('category', isEqualTo: 'Local Tours')
+                    .orderBy('timestamp', descending: true)
+                    .limit(5)
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -122,6 +125,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   final travelData = snapshot.data!.docs;
 
+                  if (travelData.isEmpty) {
+                    return const Center(child: Text('No Featured Posts Available'));
+                  }
+
                   return Container(
                     margin: const EdgeInsets.only(top: 16),
                     height: size.height * .4,
@@ -133,8 +140,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         var travelItem = travelData[index];
 
                         return FeaturedCard(
-                          imageUrl: travelItem['image'],
-                          name: travelItem['name'],
+                          imageUrl: travelItem['coverimage'],
+                          name: travelItem['title'],
                           location: travelItem['location'],
                           onTap: () {
                             Navigator.of(context).push(
@@ -175,7 +182,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
-                    .collection('travels') // Collection for Explore Tours
+                    .collection('posts')
+                    .where('category', isEqualTo: 'Local Tours')
+                    .orderBy('title')
+                    .limit(10)
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -188,6 +198,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   final exploreToursData = snapshot.data!.docs;
 
+                  if (exploreToursData.isEmpty) {
+                    return const Center(child: Text('No Explore Tours Available'));
+                  }
+
                   return Container(
                     margin: const EdgeInsets.only(top: 16),
                     height: size.height * .275,
@@ -199,8 +213,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         var exploreTourItem = exploreToursData[index];
 
                         return ExploreTourCard(
-                          imageUrl: exploreTourItem['image'],
-                          name: exploreTourItem['name'],
+                          imageUrl: exploreTourItem['coverimage'],
+                          name: exploreTourItem['title'],
                           location: exploreTourItem['location'],
                           onTap: () {
                             Navigator.of(context).push(
@@ -240,8 +254,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               StreamBuilder<QuerySnapshot>(
-                stream:
-                    FirebaseFirestore.instance.collection('foods').snapshots(),
+                stream: FirebaseFirestore.instance
+                    .collection('posts')
+                    .where('category', isEqualTo: 'Food Sharing')
+                    .orderBy('timestamp', descending: true)
+                    .limit(10)
+                    .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -252,6 +270,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
 
                   final foodConnectData = snapshot.data!.docs;
+
+                  if (foodConnectData.isEmpty) {
+                    return const Center(child: Text('No Food Connect Posts Available'));
+                  }
 
                   return Container(
                     margin: const EdgeInsets.only(top: 16),
@@ -264,10 +286,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         var foodItem = foodConnectData[index];
 
                         return FoodConnectCard(
-                          imageUrl: foodItem['image'],
-                          name: foodItem['name'],
+                          imageUrl: foodItem['coverimage'],
+                          name: foodItem['title'],
                           location: foodItem['location'],
-                          cost: foodItem['cost'],
+                          cost: foodItem['price'],
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
@@ -306,8 +328,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               StreamBuilder<QuerySnapshot>(
-                stream:
-                    FirebaseFirestore.instance.collection('skills').snapshots(),
+                stream: FirebaseFirestore.instance
+                    .collection('posts')
+                    .where('category', isEqualTo: 'Skills Exchange')
+                    .orderBy('timestamp', descending: true)
+                    .limit(10)
+                    .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -317,31 +343,34 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                   final skillsData = snapshot.data!.docs;
 
+                  if (skillsData.isEmpty) {
+                    return const Center(child: Text('No Skill Swap Posts Available'));
+                  }
+
                   return Container(
-                    margin: const EdgeInsets.only(top: 16), // Add margin here
+                    margin: const EdgeInsets.only(top: 16),
+                    height: size.height * .120,
                     child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
                       itemCount: skillsData.length,
+                      physics: const BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
                         var skillItem = skillsData[index];
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: SkillCard(
-                            name: skillItem['name'],
-                            location: skillItem['location'],
-                            rating: skillItem['rating'],
-                            imageUrl: skillItem['image'],
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => DetailView(
-                                    postid: skillItem['postid'],
-                                  ),
+
+                        return SkillCard(
+                          imageUrl: skillItem['coverimage'],
+                          name: skillItem['title'],
+                          location: skillItem['location'],
+                          rating: skillItem['rating'],
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => DetailView(
+                                  postid: skillItem['postid'],
                                 ),
-                              );
-                            },
-                          ),
+                              ),
+                            );
+                          },
                         );
                       },
                     ),

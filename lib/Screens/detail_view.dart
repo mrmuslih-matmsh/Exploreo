@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:exploreo/Components/color.dart';
 import 'package:flutter/material.dart';
 
 class DetailView extends StatefulWidget {
@@ -109,8 +110,8 @@ class _DetailViewState extends State<DetailView> {
                                     postData['title'] ?? 'Untitled',
                                     style: const TextStyle(
                                         color: Colors.black,
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.w600),
+                                        fontSize: 24,
+                                       fontFamily: 'PoppinsSemiBold',),
                                   ),
                                   Row(
                                     children: [
@@ -136,13 +137,15 @@ class _DetailViewState extends State<DetailView> {
                                     children: [
                                       const Icon(
                                         Icons.account_balance_wallet,
-                                        color: Color(0xff8f297f),
+                                        color: secondaryColor,
                                       ),
                                       const SizedBox(width: 5),
                                       Text(
-                                        postData['price'] ?? 'Price not available',
+                                        'LKR ${postData['price']}' ?? 'Price not available',
                                         style: const TextStyle(
                                           color: Colors.black,
+                                          fontSize: 18,
+                                          fontFamily: 'PoppinsMedium',
                                         ),
                                       ),
                                     ],
@@ -156,9 +159,11 @@ class _DetailViewState extends State<DetailView> {
                                       ),
                                       const SizedBox(width: 5),
                                       Text(
-                                        '${postData['location']} (${postData['distance']} km)',
+                                        '${postData['location']}',
                                         style: TextStyle(
                                           color: Colors.black87.withOpacity(.5),
+                                          fontFamily: 'PoppinsMedium',
+                                          fontSize: 14,
                                         ),
                                       ),
                                     ],
@@ -171,9 +176,10 @@ class _DetailViewState extends State<DetailView> {
                                 postData['description'] ?? 'No description available.',
                                 style: const TextStyle(
                                   color: Color(0xff686771),
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 18,
+                                  fontSize: 16,
+                                  fontFamily: 'PoppinsRegular',
                                 ),
+                                  textAlign: TextAlign.justify,
                               ),
                               const SizedBox(height: 20),
                               // Category and post ID
@@ -183,15 +189,17 @@ class _DetailViewState extends State<DetailView> {
                                   Text(
                                     'Category: ${postData['category']}',
                                     style: const TextStyle(
-                                      fontSize: 16.0,
+                                      fontSize: 14.0,
                                       color: Colors.black54,
+                                      fontFamily: 'PoppinsMedium',
                                     ),
                                   ),
                                   Text(
                                     'Post ID: ${postData['postid']}',
                                     style: const TextStyle(
-                                      fontSize: 16.0,
+                                      fontSize: 14.0,
                                       color: Colors.black54,
+                                      fontFamily: 'PoppinsMedium',
                                     ),
                                   ),
                                 ],
@@ -200,8 +208,9 @@ class _DetailViewState extends State<DetailView> {
                               Text(
                                 'Posted on: ${postData['timestamp']}',
                                 style: const TextStyle(
-                                  fontSize: 16.0,
+                                  fontSize: 14.0,
                                   color: Colors.black54,
+                                  fontFamily: 'PoppinsMedium',
                                 ),
                               ),
                               const SizedBox(height: 20),
@@ -209,8 +218,9 @@ class _DetailViewState extends State<DetailView> {
                               const Text(
                                 'Publisher',
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.bold,
+                                  fontFamily: 'PoppinsMedium',
                                 ),
                               ),
                               const SizedBox(height: 20),
@@ -232,8 +242,8 @@ class _DetailViewState extends State<DetailView> {
                                         Text(
                                           userData['name'] ?? 'Unknown',
                                           style: const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600,
+                                            fontSize: 16,
+                                            fontFamily: 'PoppinsMedium',
                                           ),
                                         ),
                                         const SizedBox(height: 5),
@@ -242,6 +252,7 @@ class _DetailViewState extends State<DetailView> {
                                           style: const TextStyle(
                                             fontSize: 14,
                                             color: Colors.black54,
+                                            fontFamily: 'PoppinsMedium',
                                           ),
                                         ),
                                       ],
@@ -289,10 +300,11 @@ class _DetailViewState extends State<DetailView> {
                               const SizedBox(height: 20),
                               // More photos section
                               const Text(
-                                'More Photos',
+                                'More Images',
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.bold,
+                                  fontFamily: 'PoppinsMedium',
                                 ),
                               ),
                               const SizedBox(height: 10),
@@ -338,23 +350,20 @@ class _DetailViewState extends State<DetailView> {
                                     decoration: BoxDecoration(
                                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                                       border: Border.all(
-                                        color: const Color(0xff8f294f),
+                                        color: secondaryColor,
                                       ),
                                     ),
                                     child: const Icon(
                                       Icons.favorite_border,
-                                      color: Color(0xff8f294f),
+                                      color: secondaryColor,
                                     ),
                                   ),
-                                  const SizedBox(width: 5),
+                                  const SizedBox(width: 10),
                                   Expanded(
                                     child: Container(
                                       padding: const EdgeInsets.all(9),
                                       decoration: BoxDecoration(
-                                        color: const Color(0xff8f294f),
-                                        border: Border.all(
-                                          color: const Color(0xff8f294f),
-                                        ),
+                                        color: secondaryColor,
                                         borderRadius: const BorderRadius.all(Radius.circular(10)),
                                       ),
                                       child: const Center(
