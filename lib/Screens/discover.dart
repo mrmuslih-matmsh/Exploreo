@@ -24,10 +24,11 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
 
   Future<void> fetchTravelData() async {
     final querySnapshot =
-        await FirebaseFirestore.instance.collection('posts').get();
+    await FirebaseFirestore.instance.collection('posts').get();
     final List<Map<String, dynamic>> fetchedData =
-        querySnapshot.docs.map((doc) {
+    querySnapshot.docs.map((doc) {
       return {
+        'postid': doc['postid'],
         'title': doc['title'],
         'location': doc['location'],
         'rating': doc['rating'],
@@ -166,85 +167,87 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
               child: _filteredTravelList.isEmpty
                   ? const Center(child: CircularProgressIndicator())
                   : ListView.builder(
-                      itemCount: _filteredTravelList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final travel = _filteredTravelList[index];
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 15.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => DetailView(id: index),
-                                ),
-                              );
-                            },
-                            child: Row(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                  child: Image.network(
-                                    travel['coverimage'],
-                                    fit: BoxFit.fill,
-                                    height: 60.0,
-                                    width: 60.0,
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        travel['title'],
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                          fontFamily: 'PoppinsSemiBold',
-                                        ),
-                                      ),
-                                      const SizedBox(height: 8.0),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            travel['location'],
-                                            style: const TextStyle(
-                                              fontSize: 14.0,
-                                              color: Color(0xff686771),
-                                              fontFamily: 'PoppinsMedium',
-                                            ),
-                                          ),
-                                          Row(
-                                            children: [
-                                              const Icon(
-                                                Icons.star,
-                                                size: 25,
-                                                color: Colors.amber,
-                                              ),
-                                              Text(
-                                                travel['rating'].toString(),
-                                                style: const TextStyle(
-                                                  fontSize: 14.0,
-                                                  fontFamily: 'PoppinsRegular',
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                itemCount: _filteredTravelList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final travel = _filteredTravelList[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 15.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => DetailView(
+                              postid: travel['postid'],
                             ),
                           ),
                         );
                       },
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                            child: Image.network(
+                              travel['coverimage'],
+                              fit: BoxFit.fill,
+                              height: 60.0,
+                              width: 60.0,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  travel['title'],
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontFamily: 'PoppinsSemiBold',
+                                  ),
+                                ),
+                                const SizedBox(height: 8.0),
+                                Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      travel['location'],
+                                      style: const TextStyle(
+                                        fontSize: 14.0,
+                                        color: Color(0xff686771),
+                                        fontFamily: 'PoppinsMedium',
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.star,
+                                          size: 25,
+                                          color: Colors.amber,
+                                        ),
+                                        Text(
+                                          travel['rating'].toString(),
+                                          style: const TextStyle(
+                                            fontSize: 14.0,
+                                            fontFamily: 'PoppinsRegular',
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
+                  );
+                },
+              ),
             ),
           ],
         ),

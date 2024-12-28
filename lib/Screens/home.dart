@@ -137,11 +137,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           name: travelItem['name'],
                           location: travelItem['location'],
                           onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => DetailView(
-                                id: travelItem['name'],
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => DetailView(
+                                  postid: travelItem['postid'],
+                                ),
                               ),
-                            ));
+                            );
                           },
                         );
                       },
@@ -201,11 +203,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           name: exploreTourItem['name'],
                           location: exploreTourItem['location'],
                           onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => DetailView(
-                                id: exploreTourItem['name'],
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => DetailView(
+                                  postid: exploreTourItem['postid'],
+                                ),
                               ),
-                            ));
+                            );
                           },
                         );
                       },
@@ -265,11 +269,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           location: foodItem['location'],
                           cost: foodItem['cost'],
                           onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => DetailView(
-                                id: foodItem['name'],
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => DetailView(
+                                  postid: foodItem['postid'],
+                                ),
                               ),
-                            ));
+                            );
                           },
                         );
                       },
@@ -330,7 +336,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => DetailView(
-                                    id: skillItem['name'],
+                                    postid: skillItem['postid'],
                                   ),
                                 ),
                               );
