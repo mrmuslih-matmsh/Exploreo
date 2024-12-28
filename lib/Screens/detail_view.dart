@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exploreo/Components/color.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailView extends StatefulWidget {
   final String postid;
@@ -25,6 +26,16 @@ class _DetailViewState extends State<DetailView> {
         .collection('users')
         .doc(userEmail)
         .get();
+  }
+
+  // Function to launch Google Maps
+  Future<void> _launchMaps(String location) async {
+
+    final Uri mapUrl = Uri.parse("google.navigation:q=$location");
+
+    if (!await launchUrl(mapUrl)) {
+      throw Exception('Could not launch $mapUrl');
+    }
   }
 
   @override
@@ -111,7 +122,7 @@ class _DetailViewState extends State<DetailView> {
                                     style: const TextStyle(
                                         color: Colors.black,
                                         fontSize: 24,
-                                       fontFamily: 'PoppinsSemiBold',),
+                                        fontFamily: 'PoppinsSemiBold'),
                                   ),
                                   Row(
                                     children: [
@@ -141,7 +152,8 @@ class _DetailViewState extends State<DetailView> {
                                       ),
                                       const SizedBox(width: 5),
                                       Text(
-                                        'LKR ${postData['price']}' ?? 'Price not available',
+                                        'LKR ${postData['price']}' ??
+                                            'Price not available',
                                         style: const TextStyle(
                                           color: Colors.black,
                                           fontSize: 18,
@@ -179,7 +191,7 @@ class _DetailViewState extends State<DetailView> {
                                   fontSize: 16,
                                   fontFamily: 'PoppinsRegular',
                                 ),
-                                  textAlign: TextAlign.justify,
+                                textAlign: TextAlign.justify,
                               ),
                               const SizedBox(height: 20),
                               // Category and post ID
@@ -248,7 +260,8 @@ class _DetailViewState extends State<DetailView> {
                                         ),
                                         const SizedBox(height: 5),
                                         Text(
-                                          userData['location'] ?? 'No location provided',
+                                          userData['location'] ??
+                                              'No location provided',
                                           style: const TextStyle(
                                             fontSize: 14,
                                             color: Colors.black54,
@@ -360,18 +373,21 @@ class _DetailViewState extends State<DetailView> {
                                   ),
                                   const SizedBox(width: 10),
                                   Expanded(
-                                    child: Container(
-                                      padding: const EdgeInsets.all(9),
-                                      decoration: BoxDecoration(
-                                        color: secondaryColor,
-                                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                      ),
-                                      child: const Center(
-                                        child: Text(
-                                          'Discover',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18.0,
+                                    child: GestureDetector(
+                                      onTap: () => _launchMaps(postData['location']),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(9),
+                                        decoration: BoxDecoration(
+                                          color: secondaryColor,
+                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                        ),
+                                        child: const Center(
+                                          child: Text(
+                                            'Discover',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18.0,
+                                            ),
                                           ),
                                         ),
                                       ),
