@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:exploreo/Screens/detail_view.dart';
 
 class ExploreTourCard extends StatelessWidget {
   final String imageUrl;
@@ -25,7 +23,7 @@ class ExploreTourCard extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          width: size.width * 0.5, // Adjust card width (square shape)
+          width: size.width * 0.5,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(15),
@@ -33,7 +31,7 @@ class ExploreTourCard extends StatelessWidget {
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
                 blurRadius: 8,
-                offset: const Offset(0, 4),
+                offset: const Offset(0, 2),
               ),
             ],
           ),
@@ -42,11 +40,11 @@ class ExploreTourCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(15), // Rounded top corners
+                  top: Radius.circular(15),
                 ),
                 child: Image.network(
                   imageUrl,
-                  height: size.width * 0.4, // Square image height
+                  height: size.width * 0.3,
                   width: double.infinity,
                   fit: BoxFit.cover, // Image cover
                 ),
@@ -60,19 +58,20 @@ class ExploreTourCard extends StatelessWidget {
                     Text(
                       name,
                       style: const TextStyle(
-                        fontSize: 16,
-                        fontFamily: 'PoppinsSemiBold',
+                        fontSize: 14,
+                        fontFamily: 'PoppinsMedium',
+                        color: Colors.black,
                       ),
-                      maxLines: 1, // Restrict to one line
-                      overflow: TextOverflow.ellipsis, // Show ellipsis on overflow
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 5),
                     Row(
                       children: [
                         const Icon(
                           Icons.location_on,
-                          color: Colors.grey,
-                          size: 16,
+                          color: Colors.red,
+                          size: 14,
                         ),
                         const SizedBox(width: 4),
                         // Location Text with Ellipsis overflow
@@ -80,11 +79,11 @@ class ExploreTourCard extends StatelessWidget {
                           child: Text(
                             location,
                             style: const TextStyle(
-                              fontSize: 14,
+                              fontSize: 12,
                               color: Colors.grey,
                               fontFamily: 'PoppinsMedium',
                             ),
-                            overflow: TextOverflow.ellipsis, // Show ellipsis on overflow
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],

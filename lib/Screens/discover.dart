@@ -1,3 +1,4 @@
+import 'package:exploreo/Components/color.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exploreo/Screens/detail_view.dart';
@@ -24,9 +25,9 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
 
   Future<void> fetchTravelData() async {
     final querySnapshot =
-    await FirebaseFirestore.instance.collection('posts').get();
+        await FirebaseFirestore.instance.collection('posts').get();
     final List<Map<String, dynamic>> fetchedData =
-    querySnapshot.docs.map((doc) {
+        querySnapshot.docs.map((doc) {
       return {
         'postid': doc['postid'],
         'title': doc['title'],
@@ -37,7 +38,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     }).toList();
     setState(() {
       _travelList = fetchedData;
-      _filteredTravelList = fetchedData; // Initially, show all the data
+      _filteredTravelList = fetchedData;
       sortData();
     });
   }
@@ -72,8 +73,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
 
   @override
   void dispose() {
-    _searchController
-        .dispose(); // Dispose the controller when the widget is disposed
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -81,8 +81,17 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: primaryColor,
       appBar: AppBar(
-        title: const Text('Discover'),
+        title: const Text(
+          'Discover',
+          style: TextStyle(
+            fontSize: 18,
+            fontFamily: 'PoppinsSemiBold',
+            color: Colors.black,
+          ),
+        ),
+        backgroundColor: primaryColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -101,8 +110,12 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 8),
-                    child: const Icon(Icons.search, size: 24),
+                    padding: const EdgeInsets.only(left: 10),
+                    child: const Icon(
+                      Icons.search,
+                      size: 24,
+                      color: Colors.black,
+                    ),
                   ),
                   const SizedBox(width: 5),
                   Expanded(
@@ -111,11 +124,21 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Search Places',
+                        hintStyle: TextStyle(
+                          fontSize: 14,
+                          fontFamily: 'PoppinsRegular',
+                          color: Colors.grey,
+                        ),
+                      ),
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'PoppinsRegular',
+                        color: Colors.black,
                       ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(right: 8),
+                    padding: const EdgeInsets.only(right: 10),
                     child: GestureDetector(
                       onTap: () async {
                         final option = await showModalBottomSheet<String>(
@@ -153,7 +176,11 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                           });
                         }
                       },
-                      child: const Icon(Icons.sort, size: 24),
+                      child: const Icon(
+                        Icons.sort,
+                        size: 24,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ],
@@ -165,89 +192,94 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
             // Travel list
             Expanded(
               child: _filteredTravelList.isEmpty
-                  ? const Center(child: CircularProgressIndicator())
+                  ? const Center(child: CircularProgressIndicator(color: secondaryColor,))
                   : ListView.builder(
-                itemCount: _filteredTravelList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final travel = _filteredTravelList[index];
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 15.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => DetailView(
-                              postid: travel['postid'],
-                            ),
-                          ),
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                            child: Image.network(
-                              travel['coverimage'],
-                              fit: BoxFit.fill,
-                              height: 60.0,
-                              width: 60.0,
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment:
-                              CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  travel['title'],
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontFamily: 'PoppinsSemiBold',
+                      itemCount: _filteredTravelList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final travel = _filteredTravelList[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 15.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => DetailView(
+                                    postid: travel['postid'],
                                   ),
                                 ),
-                                const SizedBox(height: 8.0),
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      travel['location'],
-                                      style: const TextStyle(
-                                        fontSize: 14.0,
-                                        color: Color(0xff686771),
-                                        fontFamily: 'PoppinsMedium',
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                  child: Image.network(
+                                    travel['coverimage'],
+                                    fit: BoxFit.fill,
+                                    height: 55.0,
+                                    width: 55.0,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        travel['title'],
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontFamily: 'PoppinsMedium',
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis ,
                                       ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.star,
-                                          size: 25,
-                                          color: Colors.amber,
-                                        ),
-                                        Text(
-                                          travel['rating'].toString(),
-                                          style: const TextStyle(
-                                            fontSize: 14.0,
-                                            fontFamily: 'PoppinsRegular',
+                                      const SizedBox(height: 8.0),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            travel['location'],
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey,
+                                              fontFamily: 'PoppinsMedium',
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis ,
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                          Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.star,
+                                                size: 23,
+                                                color: Colors.amber,
+                                              ),
+                                              Text(
+                                                travel['rating'].toString(),
+                                                style: const TextStyle(
+                                                  fontSize: 14.0,
+                                                  fontFamily: 'PoppinsRegular',
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
                           ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             ),
           ],
         ),

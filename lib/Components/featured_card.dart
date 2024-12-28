@@ -16,8 +16,8 @@ class FeaturedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double cardWidth = 250.0;
-    double cardHeight = cardWidth * 0.6;
+    double cardWidth = 220.0;
+    double cardHeight = cardWidth * 0.4;
 
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
@@ -45,11 +45,11 @@ class FeaturedCard extends StatelessWidget {
                 child: Container(
                   width: cardWidth - 40,
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   decoration: const BoxDecoration(
                     color: Color.fromRGBO(0, 0, 0, .5),
                     borderRadius: BorderRadius.all(
-                      Radius.circular(10),
+                      Radius.circular(12),
                     ),
                   ),
                   child: Column(
@@ -59,8 +59,8 @@ class FeaturedCard extends StatelessWidget {
                         name,
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 18,
-                          fontFamily: 'PoppinsSemiBold',
+                          fontSize: 14,
+                          fontFamily: 'PoppinsMedium',
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -70,16 +70,16 @@ class FeaturedCard extends StatelessWidget {
                         children: [
                           const Icon(
                             Icons.location_on,
-                            color: Colors.white,
-                            size: 16,
+                            color: Colors.red,
+                            size: 14,
                           ),
                           const SizedBox(width: 4),
                           Text(
                             location,
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 14,
-                              fontFamily: 'PoppinsMedium',
+                              fontSize: 12,
+                              fontFamily: 'PoppinsRegular',
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,

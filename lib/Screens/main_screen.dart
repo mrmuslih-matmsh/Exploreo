@@ -50,8 +50,9 @@ class MainScreenState extends State<MainScreen> {
         unselectedLabelStyle: const TextStyle(
           fontSize: 12,
           fontFamily: 'PoppinsRegular',
+          color: Colors.black,
         ),
-        elevation: 8.0, // Adds shadow for a floating effect
+        elevation: 8.0,
         items: [
           const BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -63,8 +64,8 @@ class MainScreenState extends State<MainScreen> {
           ),
           BottomNavigationBarItem(
             icon: Container(
-              height: 32,
-              width: 32,
+              height: 33,
+              width: 33,
               decoration: BoxDecoration(
                 color: secondaryColor,
                 shape: BoxShape.rectangle,

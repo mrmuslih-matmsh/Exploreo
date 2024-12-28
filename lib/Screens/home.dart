@@ -20,13 +20,14 @@ class _HomeScreenState extends State<HomeScreen> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
+      backgroundColor: primaryColor,
       appBar: AppBar(
         title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(
-              Icons.menu, // Menu icon
+              Icons.menu,
               size: 30,
               color: secondaryColor,
             ),
@@ -36,30 +37,30 @@ class _HomeScreenState extends State<HomeScreen> {
                 Icon(
                   Icons.location_on,
                   size: 20,
-                  color: secondaryColor,
+                  color: Colors.red,
                 ),
                 SizedBox(
                   width: 2,
                 ),
                 Text(
                   'Sri Lanka',
-                  style: TextStyle(color: secondaryColor, fontSize: 16.0),
+                  style: TextStyle(color: Colors.black, fontSize: 14.0, fontFamily: 'PoppinsRegular',),
                 ),
                 Icon(
                   Icons.keyboard_arrow_down,
-                  color: secondaryColor,
+                  color: Colors.black,
                 )
               ],
             ),
             Icon(
-              Icons.notifications_none_rounded, // Notification icon
-              size: 30,
+              Icons.notifications_none_outlined,
+              size: 26,
               color: secondaryColor,
             ),
           ],
         ),
         centerTitle: false,
-        backgroundColor: Colors.white,
+        backgroundColor: primaryColor,
         elevation: 0.0,
       ),
       body: SingleChildScrollView(
@@ -71,26 +72,43 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 24,
               ),
-              RichText(
-                text: TextSpan(
-                  text: 'Discover',
-                  style: const TextStyle(
-                    fontFamily: 'PoppinsMedium',
-                    color: secondaryColor,
-                    fontSize: 28,
-                    height: 1.3,
-                  ),
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: ' the Best Places to Travel',
-                      style: TextStyle(
-                        fontFamily: 'PoppinsSemiBold',
-                        fontSize: 26,
-                        color: Colors.black.withOpacity(.8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Exploreo\n',
+                        style: const TextStyle(
+                          fontFamily: 'PoppinsSemiBold',
+                          color: secondaryColor,
+                          fontSize: 20,
+                          height: 1.5,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: 'Explore more, Experience deeper',
+                            style: TextStyle(
+                              fontFamily: 'PoppinsRegular',
+                              fontSize: 12,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  SizedBox(width: 10.0),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: Image.asset(
+                      'assets/pro.png',
+                      width: 50.0,
+                      height: 50.0,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(
                 height: 34,
@@ -101,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text(
                     'Featured',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 18,
                       fontFamily: 'PoppinsMedium',
                     ),
                   ),
@@ -116,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator(color: secondaryColor,));
                   }
 
                   if (snapshot.hasError) {
@@ -126,12 +144,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   final travelData = snapshot.data!.docs;
 
                   if (travelData.isEmpty) {
-                    return const Center(child: Text('No Featured Posts Available'));
+                    return Center(
+                      child: Container(
+                        margin: EdgeInsets.only(top: 18.0),
+                        child: Text('No Featured Posts Available', style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                          fontFamily: 'PoppinsRegular',
+                        )),
+                      ),
+                    );
                   }
 
                   return Container(
                     margin: const EdgeInsets.only(top: 16),
-                    height: size.height * .4,
+                    height: size.height * .35,
                     child: ListView.builder(
                       itemCount: travelData.length,
                       physics: const BouncingScrollPhysics(),
@@ -167,14 +194,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text(
                     'Explore Tours',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 18,
                       fontFamily: 'PoppinsMedium',
                     ),
                   ),
                   Text(
                     'View All',
                     style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontFamily: 'PoppinsMedium',
                         color: secondaryColor),
                   ),
@@ -189,7 +216,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator(color: secondaryColor,));
                   }
 
                   if (snapshot.hasError) {
@@ -199,12 +226,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   final exploreToursData = snapshot.data!.docs;
 
                   if (exploreToursData.isEmpty) {
-                    return const Center(child: Text('No Explore Tours Available'));
+                    return Center(
+                      child: Container(
+                        margin: EdgeInsets.only(top: 18.0),
+                        child: Text('No Explore Tours Available', style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                          fontFamily: 'PoppinsRegular',
+                        )),
+                      ),
+                    );
                   }
 
                   return Container(
                     margin: const EdgeInsets.only(top: 16),
-                    height: size.height * .275,
+                    height: size.height * .24,
                     child: ListView.builder(
                       itemCount: exploreToursData.length,
                       physics: const BouncingScrollPhysics(),
@@ -240,14 +276,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text(
                     'Food Connect',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 18,
                       fontFamily: 'PoppinsMedium',
                     ),
                   ),
                   Text(
                     'View All',
                     style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontFamily: 'PoppinsMedium',
                         color: secondaryColor),
                   ),
@@ -262,7 +298,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator(color: secondaryColor,));
                   }
 
                   if (snapshot.hasError) {
@@ -272,12 +308,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   final foodConnectData = snapshot.data!.docs;
 
                   if (foodConnectData.isEmpty) {
-                    return const Center(child: Text('No Food Connect Posts Available'));
+                    return Center(
+                      child: Container(
+                        margin: EdgeInsets.only(top: 18.0),
+                        child: Text('No Food Connect Posts Available', style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                          fontFamily: 'PoppinsRegular',
+                        )),
+                      ),
+                    );
                   }
 
                   return Container(
                     margin: const EdgeInsets.only(top: 16),
-                    height: size.height * .120,
+                    height: size.height * .11,
                     child: ListView.builder(
                       itemCount: foodConnectData.length,
                       physics: const BouncingScrollPhysics(),
@@ -314,14 +359,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text(
                     'Skill Swap',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 18,
                       fontFamily: 'PoppinsMedium',
                     ),
                   ),
                   Text(
                     'View All',
                     style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontFamily: 'PoppinsMedium',
                         color: secondaryColor),
                   ),
@@ -336,7 +381,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator(color: secondaryColor,));
                   }
                   if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
@@ -344,7 +389,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   final skillsData = snapshot.data!.docs;
 
                   if (skillsData.isEmpty) {
-                    return const Center(child: Text('No Skill Swap Posts Available'));
+                    return Center(
+                      child: Container(
+                        margin: EdgeInsets.only(top: 18.0),
+                        child: Text('No Skill Swap Posts Available', style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                          fontFamily: 'PoppinsRegular',
+                        )),
+                      ),
+                    );
                   }
 
                   return Container(

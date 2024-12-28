@@ -1,6 +1,5 @@
+import 'package:exploreo/Components/color.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:exploreo/Screens/detail_view.dart';
 
 class FoodConnectCard extends StatelessWidget {
   final String imageUrl;
@@ -23,7 +22,7 @@ class FoodConnectCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.7, // Adjust width
+        width: MediaQuery.of(context).size.width * 0.7,
         margin: const EdgeInsets.only(right: 15),
         padding: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
@@ -44,8 +43,8 @@ class FoodConnectCard extends StatelessWidget {
               child: Image.network(
                 imageUrl,
                 fit: BoxFit.cover,
-                height: 75.0,
-                width: 75.0,
+                height: 70.0,
+                width: 70.0,
               ),
             ),
             const SizedBox(width: 10.0),
@@ -57,8 +56,9 @@ class FoodConnectCard extends StatelessWidget {
                   Text(
                     name,
                     style: const TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'PoppinsSemiBold',
+                      fontSize: 14,
+                      fontFamily: 'PoppinsMedium',
+                      color: Colors.black,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -66,9 +66,9 @@ class FoodConnectCard extends StatelessWidget {
                   Text(
                     location,
                     style: const TextStyle(
-                      fontSize: 14.0,
-                      color: Color(0xff686771),
-                      fontFamily: 'PoppinsMedium',
+                      fontSize: 12.0,
+                      color: Colors.grey,
+                      fontFamily: 'PoppinsRegular',
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -76,9 +76,9 @@ class FoodConnectCard extends StatelessWidget {
                   Text(
                     '\$${cost.toString()}',
                     style: const TextStyle(
-                      fontSize: 16.0,
+                      fontSize: 15.0,
                       fontFamily: 'PoppinsSemiBold',
-                      color: Colors.black,
+                      color: secondaryColor,
                     ),
                   ),
                 ],

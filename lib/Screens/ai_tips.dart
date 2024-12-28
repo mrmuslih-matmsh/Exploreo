@@ -24,7 +24,8 @@ class _AiTipsScreenState extends State<AiTipsScreen> {
   }
 
   void _sendWelcomeMessage() {
-    _sendMessageToAI("Welcome to Exploreo AI Travel Assistant! How can I assist you with your travel-related questions today?");
+    _sendMessageToAI(
+        "Welcome to Exploreo AI Travel Assistant! How can I assist you with your travel-related questions today?");
   }
 
   void _sendMessage() async {
@@ -49,7 +50,8 @@ class _AiTipsScreenState extends State<AiTipsScreen> {
       ]);
 
       setState(() {
-        _messages.add({"sender": "ai", "message": response?.output ?? "No response"});
+        _messages.add(
+            {"sender": "ai", "message": response?.output ?? "No response"});
         _isLoading = false;
       });
     } catch (e) {
@@ -60,8 +62,16 @@ class _AiTipsScreenState extends State<AiTipsScreen> {
   }
 
   bool _isTravelRelated(String message) {
-    final travelKeywords = ["travel", "trip", "destination", "tour", "vacation", "flight"];
-    return travelKeywords.any((keyword) => message.toLowerCase().contains(keyword));
+    final travelKeywords = [
+      "travel",
+      "trip",
+      "destination",
+      "tour",
+      "vacation",
+      "flight"
+    ];
+    return travelKeywords
+        .any((keyword) => message.toLowerCase().contains(keyword));
   }
 
   void _sendMessageToAI(String message) {
@@ -79,7 +89,8 @@ class _AiTipsScreenState extends State<AiTipsScreen> {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
           child: Row(
-            mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+            mainAxisAlignment:
+                isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
             children: [
               if (!isUser)
                 const CircleAvatar(
@@ -87,12 +98,14 @@ class _AiTipsScreenState extends State<AiTipsScreen> {
                 ),
               const SizedBox(width: 10),
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 decoration: BoxDecoration(
-                  color: isUser ? Colors.blue : Colors.grey[200],
+                  color: isUser ? secondaryColor : Colors.grey[200],
                   borderRadius: BorderRadius.circular(20),
                 ),
-                constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
+                constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 0.7),
                 child: Text(
                   message['message'] ?? '',
                   style: TextStyle(
@@ -116,8 +129,17 @@ class _AiTipsScreenState extends State<AiTipsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: primaryColor,
       appBar: AppBar(
-        title: const Text("AI Travel Assistant"),
+        title: const Text(
+          "AI Travel Assistant",
+          style: TextStyle(
+            fontSize: 18,
+            fontFamily: 'PoppinsSemiBold',
+            color: Colors.black,
+          ),
+        ),
+        backgroundColor: primaryColor,
       ),
       body: Column(
         children: [
@@ -131,17 +153,39 @@ class _AiTipsScreenState extends State<AiTipsScreen> {
                     controller: _controller,
                     decoration: InputDecoration(
                       hintText: "Ask a travel-related question...",
+                      hintStyle: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'PoppinsRegular',
+                        color: Colors.grey,
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: secondaryColor,
+                          width: 2.0,
+                        ),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 20),
+                    ),
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: 'PoppinsRegular',
+                      color: Colors.black,
                     ),
                   ),
                 ),
                 IconButton(
                   icon: _isLoading
-                      ? const CircularProgressIndicator(color: secondaryColor,)
-                      : const Icon(Icons.send),
+                      ? SizedBox(
+                          height: 20.0,
+                          width: 20.0,
+                          child: const CircularProgressIndicator(
+                            color: secondaryColor,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Icon(Icons.send, color: secondaryColor,),
                   onPressed: _isLoading ? null : _sendMessage,
                 ),
               ],

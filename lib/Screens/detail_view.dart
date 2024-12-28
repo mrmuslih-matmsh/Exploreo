@@ -30,7 +30,6 @@ class _DetailViewState extends State<DetailView> {
 
   // Function to launch Google Maps
   Future<void> _launchMaps(String location) async {
-
     final Uri mapUrl = Uri.parse("google.navigation:q=$location");
 
     if (!await launchUrl(mapUrl)) {
@@ -47,7 +46,10 @@ class _DetailViewState extends State<DetailView> {
         future: getPostData(),
         builder: (context, postSnapshot) {
           if (postSnapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+                child: CircularProgressIndicator(
+              color: secondaryColor,
+            ));
           }
 
           if (!postSnapshot.hasData || postSnapshot.data == null) {
@@ -115,34 +117,39 @@ class _DetailViewState extends State<DetailView> {
                             children: [
                               // Title and rating
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     postData['title'] ?? 'Untitled',
                                     style: const TextStyle(
                                         color: Colors.black,
-                                        fontSize: 24,
+                                        fontSize: 22,
                                         fontFamily: 'PoppinsSemiBold'),
                                   ),
                                   Row(
                                     children: [
                                       const Icon(
                                         Icons.star,
-                                        color: Colors.yellow,
-                                        size: 30,
+                                        color: Colors.amber,
+                                        size: 26,
                                       ),
                                       Text(
                                         postData['rating'].toString(),
-                                        style: const TextStyle(fontSize: 16.0),
+                                        style: const TextStyle(
+                                            fontSize: 16.0,
+                                            fontFamily: 'PoppinsMedium',
+                                            color: Colors.black),
                                       ),
                                     ],
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 12),
                               // Cost and location
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     children: [
@@ -173,8 +180,8 @@ class _DetailViewState extends State<DetailView> {
                                       Text(
                                         '${postData['location']}',
                                         style: TextStyle(
-                                          color: Colors.black87.withOpacity(.5),
-                                          fontFamily: 'PoppinsMedium',
+                                          color: Colors.grey,
+                                          fontFamily: 'PoppinsRegular',
                                           fontSize: 14,
                                         ),
                                       ),
@@ -185,33 +192,35 @@ class _DetailViewState extends State<DetailView> {
                               const SizedBox(height: 10),
                               // Description
                               Text(
-                                postData['description'] ?? 'No description available.',
+                                postData['description'] ??
+                                    'No description available.',
                                 style: const TextStyle(
-                                  color: Color(0xff686771),
+                                  color: Colors.grey,
                                   fontSize: 16,
                                   fontFamily: 'PoppinsRegular',
                                 ),
                                 textAlign: TextAlign.justify,
                               ),
-                              const SizedBox(height: 20),
+                              const SizedBox(height: 24),
                               // Category and post ID
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Category: ${postData['category']}',
                                     style: const TextStyle(
                                       fontSize: 14.0,
-                                      color: Colors.black54,
-                                      fontFamily: 'PoppinsMedium',
+                                      color: Colors.black,
+                                      fontFamily: 'PoppinsRegular',
                                     ),
                                   ),
                                   Text(
                                     'Post ID: ${postData['postid']}',
                                     style: const TextStyle(
                                       fontSize: 14.0,
-                                      color: Colors.black54,
-                                      fontFamily: 'PoppinsMedium',
+                                      color: Colors.black,
+                                      fontFamily: 'PoppinsRegular',
                                     ),
                                   ),
                                 ],
@@ -221,17 +230,16 @@ class _DetailViewState extends State<DetailView> {
                                 'Posted on: ${postData['timestamp']}',
                                 style: const TextStyle(
                                   fontSize: 14.0,
-                                  color: Colors.black54,
-                                  fontFamily: 'PoppinsMedium',
+                                  color: Colors.black,
+                                  fontFamily: 'PoppinsRegular',
                                 ),
                               ),
-                              const SizedBox(height: 20),
+                              const SizedBox(height: 26),
                               // Publisher details
                               const Text(
                                 'Publisher',
                                 style: TextStyle(
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold,
                                   fontFamily: 'PoppinsMedium',
                                 ),
                               ),
@@ -249,7 +257,8 @@ class _DetailViewState extends State<DetailView> {
                                   const SizedBox(width: 10),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           userData['name'] ?? 'Unknown',
@@ -264,8 +273,8 @@ class _DetailViewState extends State<DetailView> {
                                               'No location provided',
                                           style: const TextStyle(
                                             fontSize: 14,
-                                            color: Colors.black54,
-                                            fontFamily: 'PoppinsMedium',
+                                            color: Colors.grey,
+                                            fontFamily: 'PoppinsRegular',
                                           ),
                                         ),
                                       ],
@@ -276,14 +285,13 @@ class _DetailViewState extends State<DetailView> {
                                       Container(
                                         decoration: BoxDecoration(
                                           shape: BoxShape.rectangle,
-                                          borderRadius: BorderRadius.circular(10),
-                                          border: Border.all(
-                                            color: Colors.grey.shade400,
-                                          ),
+                                          color: secondaryColor,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
                                         child: IconButton(
-                                          icon: const Icon(Icons.chat_bubble_outline),
-                                          color: Colors.black,
+                                          icon: const Icon(Icons.chat),
+                                          color: Colors.white,
                                           onPressed: () {
                                             // Chat functionality
                                           },
@@ -292,15 +300,14 @@ class _DetailViewState extends State<DetailView> {
                                       const SizedBox(width: 10),
                                       Container(
                                         decoration: BoxDecoration(
+                                          color: secondaryColor,
                                           shape: BoxShape.rectangle,
-                                          borderRadius: BorderRadius.circular(10),
-                                          border: Border.all(
-                                            color: Colors.grey.shade400,
-                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
                                         child: IconButton(
                                           icon: const Icon(Icons.call),
-                                          color: Colors.black,
+                                          color: Colors.white,
                                           onPressed: () {
                                             // Call functionality
                                           },
@@ -316,7 +323,6 @@ class _DetailViewState extends State<DetailView> {
                                 'More Images',
                                 style: TextStyle(
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold,
                                   fontFamily: 'PoppinsMedium',
                                 ),
                               ),
@@ -335,7 +341,8 @@ class _DetailViewState extends State<DetailView> {
                                           onTap: () {
                                             showDialog(
                                               context: context,
-                                              builder: (context) => FullImagePopup(
+                                              builder: (context) =>
+                                                  FullImagePopup(
                                                 images: images,
                                                 initialIndex: index,
                                               ),
@@ -356,12 +363,14 @@ class _DetailViewState extends State<DetailView> {
                               const SizedBox(height: 20),
                               // Buttons at the bottom
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Container(
                                     padding: const EdgeInsets.all(10),
                                     decoration: BoxDecoration(
-                                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(10)),
                                       border: Border.all(
                                         color: secondaryColor,
                                       ),
@@ -374,19 +383,22 @@ class _DetailViewState extends State<DetailView> {
                                   const SizedBox(width: 10),
                                   Expanded(
                                     child: GestureDetector(
-                                      onTap: () => _launchMaps(postData['location']),
+                                      onTap: () =>
+                                          _launchMaps(postData['location']),
                                       child: Container(
                                         padding: const EdgeInsets.all(9),
                                         decoration: BoxDecoration(
                                           color: secondaryColor,
-                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(10)),
                                         ),
                                         child: const Center(
                                           child: Text(
                                             'Discover',
                                             style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 18.0,
+                                              fontSize: 16.0,
+                                              fontFamily: 'PoppinsMedium',
                                             ),
                                           ),
                                         ),
