@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exploreo/Components/color.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class DetailView extends StatefulWidget {
   final String postid;
@@ -12,6 +13,8 @@ class DetailView extends StatefulWidget {
 }
 
 class _DetailViewState extends State<DetailView> {
+  double _rating = 0;
+
   // Fetching post data from Firestore
   Future<DocumentSnapshot> getPostData() async {
     return await FirebaseFirestore.instance
@@ -26,6 +29,83 @@ class _DetailViewState extends State<DetailView> {
         .collection('users')
         .doc(userEmail)
         .get();
+  }
+
+  @override
+  void dispose() {
+    _reviewController.dispose();
+    super.dispose();
+  }
+
+  // Fetching reviews and ratings for the post
+  Stream<QuerySnapshot> getReviews() {
+    return FirebaseFirestore.instance
+        .collection('reviews')
+        .where('postid', isEqualTo: widget.postid)
+        .orderBy('timestamp', descending: true)
+        .snapshots();
+  }
+
+  final TextEditingController _reviewController = TextEditingController();
+
+  Future<void> addReview() async {
+    // Check if the review text is empty
+    if (_reviewController.text.isEmpty) {
+      // Show a warning if the review is empty
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Please write a review before submitting.')),
+      );
+      return;
+    }
+
+    try {
+      // Add the review to the 'reviews' collection
+      await FirebaseFirestore.instance.collection('reviews').add({
+        'postid': widget.postid,
+        'rating': _rating,
+        'name': 'muslih',
+        'reviewText': _reviewController.text,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+
+      // Calculate the average rating
+      var reviewsSnapshot = await FirebaseFirestore.instance
+          .collection('reviews')
+          .where('postid', isEqualTo: widget.postid)
+          .get();
+
+      double totalRating = 0;
+      int reviewCount = reviewsSnapshot.docs.length;
+
+      // Loop through all the reviews and calculate the total rating
+      for (var doc in reviewsSnapshot.docs) {
+        totalRating += doc['rating'].toDouble();
+      }
+
+      // Calculate the average rating
+      double averageRating = totalRating / reviewCount;
+
+      // Update the post with the new average rating
+      await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.postid)
+          .update({
+        'rating': averageRating,
+      });
+
+      // Clear the text field and notify the user of success
+      _reviewController.clear();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Review submitted successfully!')),
+      );
+    } catch (e) {
+      // Handle errors
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Failed to submit review. Please try again.')),
+      );
+    }
   }
 
   // Function to launch Google Maps
@@ -85,7 +165,7 @@ class _DetailViewState extends State<DetailView> {
               return CustomScrollView(
                 slivers: [
                   SliverAppBar(
-                    expandedHeight: size.height * 0.6,
+                    expandedHeight: size.height * 0.5,
                     pinned: true,
                     backgroundColor: Colors.transparent,
                     flexibleSpace: FlexibleSpaceBar(
@@ -361,7 +441,271 @@ class _DetailViewState extends State<DetailView> {
                                 ),
                               ),
                               const SizedBox(height: 20),
-                              // Buttons at the bottom
+                              // Rating and Review Section
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    'Rating and Reviews',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontFamily: 'PoppinsMedium',
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      // Show popup when "Add Review" is clicked
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Text(
+                                              'Add Review',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontFamily: 'PoppinsSemiBold',
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                // Rating Bar inside popup
+                                                RatingBar.builder(
+                                                  initialRating: _rating,
+                                                  minRating: 1,
+                                                  direction: Axis.horizontal,
+                                                  allowHalfRating: true,
+                                                  itemCount: 5,
+                                                  itemSize: 30,
+                                                  itemPadding: const EdgeInsets
+                                                      .symmetric(horizontal: 4),
+                                                  onRatingUpdate: (rating) {
+                                                    setState(() {
+                                                      _rating = rating;
+                                                    });
+                                                  },
+                                                  itemBuilder:
+                                                      (context, index) => Icon(
+                                                    Icons.star,
+                                                    color: index < _rating
+                                                        ? Colors.amber
+                                                        : Colors.grey,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 20),
+                                                // Review Text Box inside popup
+                                                TextField(
+                                                  controller: _reviewController,
+                                                  maxLines: 4,
+                                                  decoration: InputDecoration(
+                                                    hintText:
+                                                        'Write your review here...',
+                                                    hintStyle: const TextStyle(
+                                                      fontSize: 14,
+                                                      fontFamily:
+                                                          'PoppinsRegular',
+                                                      color: Colors.grey,
+                                                    ),
+                                                    border: OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      borderSide: BorderSide(
+                                                        color: secondaryColor,
+                                                        width: 1.5,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontFamily:
+                                                        'PoppinsRegular',
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 20),
+                                                // Submit Button inside popup
+                                                ElevatedButton(
+                                                  onPressed: addReview,
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        secondaryColor,
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        vertical: 10,
+                                                        horizontal: 14),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
+                                                    ),
+                                                  ),
+                                                  child: const Text(
+                                                    'Submit Review',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 12,
+                                                      fontFamily:
+                                                          'PoppinsMedium',
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: Text(
+                                      'Add Review',
+                                      style: TextStyle(
+                                        color:
+                                            secondaryColor, // Use secondary color here
+                                        fontSize: 14,
+                                        fontFamily: 'PoppinsMedium',
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 2),
+                              // Show reviews
+                              StreamBuilder<QuerySnapshot>(
+                                stream: getReviews(),
+                                builder: (context, reviewSnapshot) {
+                                  if (reviewSnapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Center(
+                                        child: CircularProgressIndicator(
+                                            color: secondaryColor));
+                                  }
+
+                                  if (!reviewSnapshot.hasData ||
+                                      reviewSnapshot.data!.docs.isEmpty) {
+                                    return const Padding(
+                                      padding: EdgeInsets.all(16),
+                                      child: Text('No reviews yet.',
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey)),
+                                    );
+                                  }
+
+                                  return Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 2),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SingleChildScrollView(
+                                          child: Column(
+                                            children: [
+                                              ListView.builder(
+                                                shrinkWrap: true,
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(),
+                                                itemCount: reviewSnapshot
+                                                    .data!.docs.length,
+                                                itemBuilder: (context, index) {
+                                                  var reviewData =
+                                                      reviewSnapshot
+                                                              .data!.docs[index]
+                                                              .data()
+                                                          as Map<String,
+                                                              dynamic>;
+                                                  var rating =
+                                                      reviewData['rating'] ?? 0;
+                                                  var reviewText = reviewData[
+                                                          'reviewText'] ??
+                                                      '';
+                                                  var reviewerName = reviewData[
+                                                          'name'] ??
+                                                      'Anonymous'; // Reviewer Name
+
+                                                  return Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(vertical: 8),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        // Reviewer's Name and Rating
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Text(
+                                                              reviewerName,
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 14,
+                                                                fontFamily:
+                                                                    'PoppinsMedium',
+                                                                color: Colors
+                                                                    .black,
+                                                              ),
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                const Icon(
+                                                                    Icons.star,
+                                                                    color: Colors
+                                                                        .amber,
+                                                                    size: 18),
+                                                                const SizedBox(
+                                                                    width: 5),
+                                                                Text(
+                                                                  '$rating/5',
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontFamily:
+                                                                        'PoppinsRegular',
+                                                                    color: Colors
+                                                                        .grey,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        const SizedBox(
+                                                            height: 10),
+                                                        // Review Text
+                                                        Text(
+                                                          reviewText,
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 14,
+                                                            color: Colors.grey,
+                                                            fontFamily:
+                                                                'PoppinsRegular',
+                                                          ),
+                                                          textAlign:
+                                                              TextAlign.justify,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                              const SizedBox(height: 30),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,

@@ -3,37 +3,25 @@ import 'package:flutter/material.dart';
 class SkillCard extends StatelessWidget {
   final String name;
   final String location;
-  final String rating;
+  final double rating;
   final String imageUrl;
   final VoidCallback onTap;
 
   const SkillCard({
-    super.key,
+    Key? key,
     required this.name,
     required this.location,
     required this.rating,
     required this.imageUrl,
     required this.onTap,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
+        margin: const EdgeInsets.symmetric(vertical: 8.0), // Optional margin
         child: Row(
           children: [
             ClipRRect(
@@ -47,7 +35,7 @@ class SkillCard extends StatelessWidget {
                 width: 55.0,
               ),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 15),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,15 +53,17 @@ class SkillCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        location,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
-                          fontFamily: 'PoppinsMedium',
+                      Expanded( // Use Expanded here to ensure location text doesn't overflow
+                        child: Text(
+                          location,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                            fontFamily: 'PoppinsMedium',
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       ),
                       Row(
                         children: [
@@ -83,7 +73,7 @@ class SkillCard extends StatelessWidget {
                             color: Colors.amber,
                           ),
                           Text(
-                            rating,
+                            '$rating',
                             style: const TextStyle(
                               fontSize: 14.0,
                               fontFamily: 'PoppinsRegular',

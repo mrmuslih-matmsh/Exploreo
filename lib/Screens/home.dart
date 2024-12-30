@@ -360,7 +360,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     );
                   }
-
                   return Container(
                     margin: const EdgeInsets.only(top: 16),
                     height: size.height * .11,
@@ -457,10 +456,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     );
                   }
-
                   return Container(
                     margin: const EdgeInsets.only(top: 16),
-                    height: size.height * .120,
+                    height: size.height * .095,
                     child: ListView.builder(
                       itemCount: skillsData.length,
                       physics: const BouncingScrollPhysics(),
@@ -468,20 +466,24 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemBuilder: (context, index) {
                         var skillItem = skillsData[index];
 
-                        return SkillCard(
-                          imageUrl: skillItem['coverimage'],
-                          name: skillItem['title'],
-                          location: skillItem['location'],
-                          rating: skillItem['rating'],
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => DetailView(
-                                  postid: skillItem['postid'],
+                        return Container(
+                          margin: const EdgeInsets.only(right: 12),
+                          width: 380,
+                          child: SkillCard(
+                            imageUrl: skillItem['coverimage'],
+                            name: skillItem['title'],
+                            location: skillItem['location'],
+                            rating: skillItem['rating'],
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => DetailView(
+                                    postid: skillItem['postid'],
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         );
                       },
                     ),
