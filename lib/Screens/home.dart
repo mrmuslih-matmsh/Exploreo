@@ -1,3 +1,4 @@
+import 'package:exploreo/Screens/view_all.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exploreo/Screens/detail_view.dart';
@@ -44,7 +45,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 Text(
                   'Sri Lanka',
-                  style: TextStyle(color: Colors.black, fontSize: 14.0, fontFamily: 'PoppinsRegular',),
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14.0,
+                    fontFamily: 'PoppinsRegular',
+                  ),
                 ),
                 Icon(
                   Icons.keyboard_arrow_down,
@@ -134,7 +139,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator(color: secondaryColor,));
+                    return const Center(
+                        child: CircularProgressIndicator(
+                      color: secondaryColor,
+                    ));
                   }
 
                   if (snapshot.hasError) {
@@ -147,11 +155,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Center(
                       child: Container(
                         margin: EdgeInsets.only(top: 18.0),
-                        child: Text('No Featured Posts Available', style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
-                          fontFamily: 'PoppinsRegular',
-                        )),
+                        child: Text('No Featured Posts Available',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14,
+                              fontFamily: 'PoppinsRegular',
+                            )),
                       ),
                     );
                   }
@@ -188,22 +197,34 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 24,
               ),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     'Explore Tours',
                     style: TextStyle(
                       fontSize: 18,
                       fontFamily: 'PoppinsMedium',
                     ),
                   ),
-                  Text(
-                    'View All',
-                    style: TextStyle(
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ViewAllScreen(category: 'Local Tours'),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'View All',
+                      style: TextStyle(
                         fontSize: 14,
                         fontFamily: 'PoppinsMedium',
-                        color: secondaryColor),
+                        color: secondaryColor,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -216,7 +237,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator(color: secondaryColor,));
+                    return const Center(
+                        child: CircularProgressIndicator(
+                      color: secondaryColor,
+                    ));
                   }
 
                   if (snapshot.hasError) {
@@ -229,11 +253,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Center(
                       child: Container(
                         margin: EdgeInsets.only(top: 18.0),
-                        child: Text('No Explore Tours Available', style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
-                          fontFamily: 'PoppinsRegular',
-                        )),
+                        child: Text('No Explore Tours Available',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14,
+                              fontFamily: 'PoppinsRegular',
+                            )),
                       ),
                     );
                   }
@@ -270,22 +295,34 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 24,
               ),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     'Food Connect',
                     style: TextStyle(
                       fontSize: 18,
                       fontFamily: 'PoppinsMedium',
                     ),
                   ),
-                  Text(
-                    'View All',
-                    style: TextStyle(
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ViewAllScreen(category: 'Food Sharing'),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'View All',
+                      style: TextStyle(
                         fontSize: 14,
                         fontFamily: 'PoppinsMedium',
-                        color: secondaryColor),
+                        color: secondaryColor,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -298,7 +335,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator(color: secondaryColor,));
+                    return const Center(
+                        child: CircularProgressIndicator(
+                      color: secondaryColor,
+                    ));
                   }
 
                   if (snapshot.hasError) {
@@ -311,11 +351,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Center(
                       child: Container(
                         margin: EdgeInsets.only(top: 18.0),
-                        child: Text('No Food Connect Posts Available', style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
-                          fontFamily: 'PoppinsRegular',
-                        )),
+                        child: Text('No Food Connect Posts Available',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14,
+                              fontFamily: 'PoppinsRegular',
+                            )),
                       ),
                     );
                   }
@@ -353,22 +394,34 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 24,
               ),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     'Skill Swap',
                     style: TextStyle(
                       fontSize: 18,
                       fontFamily: 'PoppinsMedium',
                     ),
                   ),
-                  Text(
-                    'View All',
-                    style: TextStyle(
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ViewAllScreen(category: 'Skills Exchange'),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'View All',
+                      style: TextStyle(
                         fontSize: 14,
                         fontFamily: 'PoppinsMedium',
-                        color: secondaryColor),
+                        color: secondaryColor,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -381,7 +434,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator(color: secondaryColor,));
+                    return const Center(
+                        child: CircularProgressIndicator(
+                      color: secondaryColor,
+                    ));
                   }
                   if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
@@ -392,11 +448,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Center(
                       child: Container(
                         margin: EdgeInsets.only(top: 18.0),
-                        child: Text('No Skill Swap Posts Available', style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
-                          fontFamily: 'PoppinsRegular',
-                        )),
+                        child: Text('No Skill Swap Posts Available',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14,
+                              fontFamily: 'PoppinsRegular',
+                            )),
                       ),
                     );
                   }

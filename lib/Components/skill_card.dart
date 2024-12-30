@@ -25,7 +25,7 @@ class SkillCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
@@ -37,12 +37,14 @@ class SkillCard extends StatelessWidget {
         child: Row(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(10),
+              ),
               child: Image.network(
                 imageUrl,
-                height: 60,
-                width: 60,
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
+                height: 55.0,
+                width: 55.0,
               ),
             ),
             const SizedBox(width: 10),
@@ -53,34 +55,37 @@ class SkillCard extends StatelessWidget {
                   Text(
                     name,
                     style: const TextStyle(
-                      fontSize: 14,
+                      fontSize: 16,
                       fontFamily: 'PoppinsMedium',
-                      color: Colors.black,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 8.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         location,
                         style: const TextStyle(
-                          fontSize: 12,
+                          fontSize: 14,
                           color: Colors.grey,
-                          fontFamily: 'PoppinsRegular',
+                          fontFamily: 'PoppinsMedium',
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       Row(
                         children: [
                           const Icon(
                             Icons.star,
+                            size: 23,
                             color: Colors.amber,
-                            size: 18,
                           ),
                           Text(
                             rating,
                             style: const TextStyle(
-                              fontSize: 14,
+                              fontSize: 14.0,
                               fontFamily: 'PoppinsRegular',
                               color: Colors.black,
                             ),
