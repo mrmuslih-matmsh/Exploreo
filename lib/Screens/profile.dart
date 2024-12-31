@@ -1,10 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exploreo/Screens/bookmarks_screen.dart';
 import 'package:exploreo/Screens/chat_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:exploreo/Screens/edit_profile_screen.dart';
 import 'package:exploreo/Components/color.dart';
+import 'package:exploreo/Screens/login_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -14,9 +14,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
   String? userName;
   String? userEmail;
   String? profileImage;
@@ -29,31 +26,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _loadUserData() async {
     try {
-      final User? user = _auth.currentUser;
-      if (user != null) {
-        final DocumentSnapshot userDoc =
-            await _firestore.collection('users').doc(user.uid).get();
+      final prefs = await SharedPreferences.getInstance();
 
-        setState(() {
-          final data = userDoc.data() as Map<String, dynamic>?;
-          userName = data?['name'] ?? 'Guest User';
-          userEmail = data?['email'] ?? 'No email available';
-          profileImage = data?['profileImage'] ??
-              'https://via.placeholder.com/150'; // Default image
-        });
-      } else {
-        setState(() {
-          userName = 'Guest User';
-          userEmail = 'No email available';
-          profileImage = 'https://via.placeholder.com/150'; // Default image
-        });
-      }
+      setState(() {
+        userName = prefs.getString('name') ?? 'Guest User';
+        userEmail = prefs.getString('email') ?? 'No email available';
+        profileImage = prefs.getString('profile') ??
+            'https://via.placeholder.com/150';
+      });
     } catch (e) {
-      print('Error loading user data: $e');
+      print('Error loading user data from SharedPreferences: $e');
       setState(() {
         userName = 'Error';
         userEmail = 'Error loading email';
-        profileImage = 'https://via.placeholder.com/150'; // Default image
+        profileImage = 'https://via.placeholder.com/150';
       });
     }
   }
@@ -77,11 +63,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
 
+    Future<void> _clearUserDataFromSharedPreferences() async {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('email');
+      await prefs.remove('location');
+      await prefs.remove('mobile');
+      await prefs.remove('name');
+      await prefs.remove('profile');
+    }
+
     if (confirmLogout == true) {
       try {
-        await _auth.signOut();
-        Navigator.pushReplacementNamed(
-            context, '/login'); // Redirect to login screen
+        await _clearUserDataFromSharedPreferences();
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
+
       } catch (e) {
         print('Error during logout: $e');
       }

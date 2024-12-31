@@ -3,6 +3,7 @@ import 'package:exploreo/Screens/main_screen.dart';
 import 'package:exploreo/Screens/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:exploreo/Components/color.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,10 +15,18 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   String _errorMessage = '';
+
+  Future<void> _saveUserDataToSharedPreferences(Map<String, dynamic> userData) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('email', userData['email']);
+    await prefs.setString('location', userData['location']);
+    await prefs.setString('mobile', userData['mobile']);
+    await prefs.setString('name', userData['name']);
+    await prefs.setString('profile', userData['profile']);
+  }
 
   Future<void> _login() async {
     final email = _emailController.text.trim();
@@ -48,6 +57,9 @@ class _LoginScreenState extends State<LoginScreen> {
       final storedPassword = userDoc['password'];
 
       if (storedPassword == password) {
+        // Save user data to SharedPreferences
+        await _saveUserDataToSharedPreferences(userDoc);
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const MainScreen()),

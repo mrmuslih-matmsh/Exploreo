@@ -1,6 +1,8 @@
 import 'package:exploreo/Screens/main_screen.dart';
+import 'package:exploreo/Screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:exploreo/Components/color.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,13 +15,24 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // Set a delay before navigating to the home screen
-    Future.delayed(const Duration(seconds: 4), () {
+    // Set a delay before navigating to the main screen
+    Future.delayed(const Duration(seconds: 4), () async {
       if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const MainScreen()),
-        );
+        final prefs = await SharedPreferences.getInstance();
+        final email = prefs.getString('email');
+        final name = prefs.getString('name');
+
+        if (email != null && name != null) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const MainScreen()),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginScreen()),
+          );
+        }
       }
     });
   }
@@ -41,7 +54,6 @@ class _SplashScreenState extends State<SplashScreen> {
                 width: 185.0, // Adjust the size as needed
                 height: 185.0,
               ),
-              // Title
               Spacer(), // Adds space between elements
               // Version info
               Text(
