@@ -1,3 +1,4 @@
+import 'package:exploreo/Screens/notification_screen.dart';
 import 'package:exploreo/Screens/view_all.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -23,16 +24,16 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: primaryColor,
       appBar: AppBar(
-        title: const Row(
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.menu,
               size: 30,
               color: secondaryColor,
             ),
-            Row(
+            const Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Icon(
@@ -57,11 +58,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
               ],
             ),
-            Icon(
-              Icons.notifications_none_outlined,
-              size: 26,
-              color: secondaryColor,
-            ),
+            GestureDetector(
+              onTap: () {
+                // Navigate to the notification screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const NotificationScreen()),
+                );
+              },
+              child: Icon(
+                Icons.notifications_none_outlined,
+                size: 26,
+                color: secondaryColor,
+              ),
+            )
           ],
         ),
         centerTitle: false,
