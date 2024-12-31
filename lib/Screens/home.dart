@@ -458,17 +458,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                   return Container(
                     margin: const EdgeInsets.only(top: 16),
-                    height: size.height * .095,
+                    height: MediaQuery.of(context).size.height,
                     child: ListView.builder(
                       itemCount: skillsData.length,
                       physics: const BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
                         var skillItem = skillsData[index];
 
                         return Container(
-                          margin: const EdgeInsets.only(right: 12),
-                          width: 380,
+                          margin: const EdgeInsets.only(bottom: 12),
                           child: SkillCard(
                             imageUrl: skillItem['coverimage'],
                             name: skillItem['title'],

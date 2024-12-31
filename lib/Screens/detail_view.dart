@@ -117,6 +117,16 @@ class _DetailViewState extends State<DetailView> {
     }
   }
 
+  void _makeCall(String phoneNumber) async {
+    final Uri _phoneUri = Uri(scheme: 'tel', path: phoneNumber);
+
+    try {
+      await launchUrl(_phoneUri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      print('Could not launch $phoneNumber: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -389,7 +399,7 @@ class _DetailViewState extends State<DetailView> {
                                           icon: const Icon(Icons.call),
                                           color: Colors.white,
                                           onPressed: () {
-                                            // Call functionality
+                                            _makeCall(userData['mobile']);
                                           },
                                         ),
                                       ),
@@ -440,7 +450,7 @@ class _DetailViewState extends State<DetailView> {
                                   },
                                 ),
                               ),
-                              const SizedBox(height: 20),
+                              const SizedBox(height: 30),
                               // Rating and Review Section
                               Row(
                                 mainAxisAlignment:

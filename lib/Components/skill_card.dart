@@ -21,7 +21,7 @@ class SkillCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 8.0), // Optional margin
+        margin: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
           children: [
             ClipRRect(

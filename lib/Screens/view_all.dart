@@ -28,7 +28,7 @@ class ViewAllScreen extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
             // Fetching and displaying the filtered travel list from Firestore
             Expanded(
