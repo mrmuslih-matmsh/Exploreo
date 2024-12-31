@@ -51,17 +51,17 @@ class _SplashScreenState extends State<SplashScreen> {
               // Logo image
               Image(
                 image: AssetImage('assets/exploreo_trans.png'),
-                width: 185.0, // Adjust the size as needed
+                width: 185.0,
                 height: 185.0,
               ),
-              Spacer(), // Adds space between elements
+              Spacer(),
               // Version info
               Text(
                 'Version: 1.0.0',
                 style: TextStyle(
                   fontSize: 12.0,
                   color: Colors.grey,
-                  fontFamily: "PoppinsMedium",
+                  fontFamily: "PoppinsRegular",
                 ),
               ),
             ],

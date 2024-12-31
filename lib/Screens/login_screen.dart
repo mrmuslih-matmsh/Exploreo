@@ -17,9 +17,10 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  String _errorMessage = '';
+  bool _isLoading = false;
 
-  Future<void> _saveUserDataToSharedPreferences(Map<String, dynamic> userData) async {
+  Future<void> _saveUserDataToSharedPreferences(
+      Map<String, dynamic> userData) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('email', userData['email']);
     await prefs.setString('location', userData['location']);
@@ -33,23 +34,22 @@ class _LoginScreenState extends State<LoginScreen> {
     final password = _passwordController.text.trim();
 
     if (email.isEmpty || password.isEmpty) {
-      setState(() {
-        _errorMessage = 'Please fill in both fields';
-      });
+      _showAlert('Please fill in both fields');
       return;
     }
 
+    setState(() {
+      _isLoading = true;
+    });
+
     try {
-      // Check if user exists in Firestore
       final querySnapshot = await _firestore
           .collection('users')
           .where('email', isEqualTo: email)
           .get();
 
       if (querySnapshot.docs.isEmpty) {
-        setState(() {
-          _errorMessage = 'User not found. Please sign up.';
-        });
+        _showAlert('User not found. Please sign up.');
         return;
       }
 
@@ -57,7 +57,6 @@ class _LoginScreenState extends State<LoginScreen> {
       final storedPassword = userDoc['password'];
 
       if (storedPassword == password) {
-        // Save user data to SharedPreferences
         await _saveUserDataToSharedPreferences(userDoc);
 
         Navigator.pushReplacement(
@@ -65,89 +64,183 @@ class _LoginScreenState extends State<LoginScreen> {
           MaterialPageRoute(builder: (context) => const MainScreen()),
         );
       } else {
-        setState(() {
-          _errorMessage = 'Incorrect password. Please try again.';
-        });
+        _showAlert('Incorrect password. Please try again.');
       }
     } catch (e) {
+      _showAlert('An error occurred. Please try again later.');
+    } finally {
       setState(() {
-        _errorMessage = 'An error occurred. Please try again later.';
+        _isLoading = false;
       });
     }
+  }
+
+  void _showAlert(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Alert'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login', style: TextStyle(color: Colors.black)),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'Password',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            if (_errorMessage.isNotEmpty)
-              Text(
-                _errorMessage,
-                style: const TextStyle(color: Colors.red),
-              ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _login,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primaryColor,
-                minimumSize: const Size.fromHeight(50),
-              ),
-              child: const Text('Login'),
-            ),
-            const SizedBox(height: 16),
-            TextButton(
-              onPressed: () {
-                // Navigate to forgot password screen (Not implemented here)
-              },
-              child: const Text('Forgot Password?'),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+      backgroundColor: primaryColor,
+      resizeToAvoidBottomInset: true,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text("Don't have an account?"),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SignUpScreen()),
-                    );
-                  },
-                  child: const Text('Sign Up'),
+                const SizedBox(height: 30),
+                Image(
+                  image: AssetImage('assets/exploreo_icon.png'),
+                  width: 80.0,
+                  height: 80.0,
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Log In to Explore More',
+                  style: TextStyle(
+                    fontFamily: 'PoppinsSemiBold',
+                    fontSize: 24,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 90),
+                TextField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    labelText: 'Email Address',
+                    labelStyle: TextStyle(
+                      fontFamily: 'PoppinsRegular',
+                      fontSize: 14,
+                      color: Colors.black,
+                    ),
+                    hintText: 'user@gmail.com',
+                    hintStyle: TextStyle(
+                      fontFamily: 'PoppinsRegular',
+                      fontSize: 14,
+                      color: Colors.grey,
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey.shade300,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    labelStyle: TextStyle(
+                      fontFamily: 'PoppinsRegular',
+                      fontSize: 14,
+                      color: Colors.black,
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey.shade300,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () {
+                      // Navigate to forgot password screen (Not implemented here)
+                    },
+                    child: Text(
+                      'Forgot Password?',
+                      style: TextStyle(
+                        fontFamily: 'PoppinsRegular',
+                        fontSize: 14,
+                        color: secondaryColor,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const SizedBox(height: 36),
+                ElevatedButton(
+                  onPressed: _isLoading ? null : _login,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: secondaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    minimumSize: Size(double.infinity, 50),
+                  ),
+                  child: _isLoading
+                      ? CircularProgressIndicator(
+                    color: Colors.white,
+                  )
+                      : Text(
+                    'Sign In',
+                    style: TextStyle(
+                      fontFamily: 'PoppinsMedium',
+                      fontSize: 14,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Don't have an account?",
+                      style: TextStyle(
+                        fontFamily: 'PoppinsRegular',
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SignUpScreen()),
+                        );
+                      },
+                      child: Text(
+                        'Create Account',
+                        style: TextStyle(
+                          fontFamily: 'PoppinsMedium',
+                          fontSize: 14,
+                          color: secondaryColor,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );
