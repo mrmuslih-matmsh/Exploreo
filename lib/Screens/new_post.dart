@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
+import 'package:exploreo/Components/color.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
@@ -23,6 +25,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
   XFile? _coverImage;
   List<XFile> _galleryImages = [];
   String? _currentUserEmail;
+  bool _isLoading = false;
 
   final List<String> _categories = [
     'Local Tours',
@@ -74,10 +77,6 @@ class _NewPostScreenState extends State<NewPostScreen> {
       ..fields['upload_preset'] = uploadPreset
       ..files.add(await http.MultipartFile.fromPath('file', file.path));
 
-    debugPrint('Sending request to: ${request.url}');
-    debugPrint('Upload preset: ${uploadPreset}');
-    debugPrint('File path: ${file.path}');
-
     try {
       final response = await request.send();
       if (response.statusCode == 200) {
@@ -85,13 +84,10 @@ class _NewPostScreenState extends State<NewPostScreen> {
         final Map<String, dynamic> data = json.decode(responseData.body);
         return data['secure_url'];
       } else {
-        debugPrint(
-            'Image upload failed with status code: ${response.statusCode}');
         return Future.error(
             'Image upload failed with status code: ${response.statusCode}');
       }
     } catch (e) {
-      debugPrint('Image upload failed: $e');
       return Future.error('Image upload failed: $e');
     }
   }
@@ -122,6 +118,10 @@ class _NewPostScreenState extends State<NewPostScreen> {
       return;
     }
 
+    setState(() {
+      _isLoading = true;
+    });
+
     try {
       // Upload images to Cloudinary
       final String coverImageUrl = await _uploadImageToCloudinary(_coverImage!);
@@ -130,6 +130,9 @@ class _NewPostScreenState extends State<NewPostScreen> {
 
       // Get the current date without time
       String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+      // Generate a random 4-digit number
+      final randomPostId = "P${(1000 + Random().nextInt(9000)).toString()}";
 
       // Prepare post details with a timestamp and postid
       Map<String, dynamic> postDetails = {
@@ -143,18 +146,14 @@ class _NewPostScreenState extends State<NewPostScreen> {
         "rating": 0.0,
         "timestamp": formattedDate,
         "title": _titleController.text,
+        "postid": randomPostId, // Add the random postid
       };
 
       // Save to Firestore and retrieve the document reference
-      DocumentReference postRef =
-          await FirebaseFirestore.instance.collection('posts').add(postDetails);
-
-      String postid = postRef.id;
-
-      // Update the post with the postid (set it to match the document id)
-      await postRef.update({
-        "postid": postid,
-      });
+      await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(randomPostId)
+          .set(postDetails);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Post added successfully!')),
@@ -169,11 +168,15 @@ class _NewPostScreenState extends State<NewPostScreen> {
         _priceController.clear();
         _locationController.clear();
         _selectedCategory = null;
+        _isLoading = false;
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),
       );
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -182,10 +185,17 @@ class _NewPostScreenState extends State<NewPostScreen> {
     final double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: primaryColor,
       appBar: AppBar(
-        title: const Text('New Post'),
-        backgroundColor: Colors.grey[100],
+        title: const Text(
+          'New Post',
+          style: TextStyle(
+            fontSize: 18,
+            fontFamily: 'PoppinsSemiBold',
+            color: Colors.black,
+          ),
+        ),
+        backgroundColor: primaryColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -193,60 +203,22 @@ class _NewPostScreenState extends State<NewPostScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: GestureDetector(
-                  onTap: _pickCoverImage,
-                  child: Container(
-                    height: 200,
-                    width: 200,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: _coverImage == null
-                        ? const Center(
-                            child: Text('Tap to select a cover image'))
-                        : Image.file(
-                            File(_coverImage!.path),
-                            fit: BoxFit.cover,
-                          ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Center(
-                child: ElevatedButton(
-                  onPressed: _pickGalleryImages,
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: const Text('Select Gallery Images'),
-                ),
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8.0,
-                runSpacing: 8.0,
-                children: _galleryImages.map((image) {
-                  return Image.file(
-                    File(image.path),
-                    width: 100,
-                    height: 100,
-                    fit: BoxFit.cover,
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
               TextField(
                 controller: _titleController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Title',
-                  border: OutlineInputBorder(),
+                  labelStyle: const TextStyle(
+                    fontFamily: 'PoppinsRegular',
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: Colors.grey.shade300,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -263,61 +235,212 @@ class _NewPostScreenState extends State<NewPostScreen> {
                     _selectedCategory = value;
                   });
                 },
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Select Category',
-                  border: OutlineInputBorder(),
+                  labelStyle: const TextStyle(
+                    fontFamily: 'PoppinsRegular',
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: Colors.grey.shade300,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: _descriptionController,
                 maxLines: 5,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Description',
-                  border: OutlineInputBorder(),
+                  labelStyle: const TextStyle(
+                    fontFamily: 'PoppinsRegular',
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: Colors.grey.shade300,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: _priceController,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Price',
-                  border: OutlineInputBorder(),
+                  labelStyle: const TextStyle(
+                    fontFamily: 'PoppinsRegular',
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: Colors.grey.shade300,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: _locationController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Location',
-                  border: OutlineInputBorder(),
+                  labelStyle: const TextStyle(
+                    fontFamily: 'PoppinsRegular',
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: Colors.grey.shade300,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
+              Center(
+                child: GestureDetector(
+                  onTap: _pickCoverImage,
+                  child: Container(
+                    height: 220, // Normal height, adjust as needed
+                    width: double.infinity, // Full width
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      border: Border.all(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          offset: Offset(0, 2),
+                          blurRadius: 6,
+                        ),
+                      ],
+                    ),
+                    child: _coverImage == null
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.image,
+                                color: Colors.black.withOpacity(0.6),
+                                size: 30,
+                              ),
+                              const SizedBox(height: 8),
+                              const Text(
+                                'Tap to select a cover image',
+                                style: TextStyle(
+                                  fontFamily: 'PoppinsRegular',
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          )
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.file(
+                              File(_coverImage!.path),
+                              fit: BoxFit.cover,
+                              height: double.infinity,
+                              width: double.infinity,
+                            ),
+                          ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Center(
+                child: GestureDetector(
+                  onTap: _pickGalleryImages,
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 34),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          offset: Offset(0, 2),
+                          blurRadius: 6,
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.photo_library,
+                          color: Colors.black.withOpacity(0.6),
+                          size: 30,
+                        ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'Select More Images',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'PoppinsRegular',
+                            fontSize: 14,
+                            color: Colors.black, // Text color
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 8.0,
+                runSpacing: 8.0,
+                children: _galleryImages.map((image) {
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.file(
+                      File(image.path),
+                      width: (MediaQuery.of(context).size.width - 32) / 3,
+                      height: 120, // Normal height
+                      fit: BoxFit.cover,
+                    ),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 26),
               SizedBox(
                 width: screenWidth,
                 child: ElevatedButton(
-                  onPressed: _submitPost,
+                  onPressed: _isLoading ? null : _submitPost,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: secondaryColor,
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  child: const Text(
-                    'Add Post',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  child: _isLoading
+                      ? const CircularProgressIndicator(
+                          color: secondaryColor,
+                        )
+                      : const Text(
+                          'Add Post',
+                          style: TextStyle(
+                            fontFamily: 'PoppinsMedium',
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
               ),
             ],
