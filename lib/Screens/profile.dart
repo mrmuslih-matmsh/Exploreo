@@ -1,5 +1,6 @@
 import 'package:exploreo/Screens/bookmarks_screen.dart';
 import 'package:exploreo/Screens/chat_screen.dart';
+import 'package:exploreo/Screens/my_posts_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:exploreo/Screens/edit_profile_screen.dart';
@@ -31,8 +32,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         userName = prefs.getString('name') ?? 'Guest User';
         userEmail = prefs.getString('email') ?? 'No email available';
-        profileImage = prefs.getString('profile') ??
-            'https://via.placeholder.com/150';
+        profileImage =
+            prefs.getString('profile') ?? 'https://via.placeholder.com/150';
       });
     } catch (e) {
       print('Error loading user data from SharedPreferences: $e');
@@ -79,7 +80,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           context,
           MaterialPageRoute(builder: (context) => const LoginScreen()),
         );
-
       } catch (e) {
         print('Error during logout: $e');
       }
@@ -188,7 +188,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           icon: Icons.post_add,
                           label: 'My Posts',
                           onPressed: () {
-                            // Navigate to My Posts Screen
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MyPostsScreen(),
+                              ),
+                            );
                           },
                         ),
                         _buildProfileButton(
