@@ -8,6 +8,7 @@ import 'package:exploreo/Components/featured_card.dart';
 import 'package:exploreo/Components/explore_tour_card.dart';
 import 'package:exploreo/Components/food_card.dart';
 import 'package:exploreo/Components/skill_card.dart';
+import 'package:exploreo/Screens/user_profile_view_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -63,7 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 // Navigate to the notification screen
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const NotificationScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => const NotificationScreen()),
                 );
               },
               child: Icon(
@@ -114,13 +116,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   SizedBox(width: 10.0),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: Image.asset(
-                      'assets/pro.png',
-                      width: 50.0,
-                      height: 50.0,
-                      fit: BoxFit.cover,
+                  GestureDetector(
+                    onTap: () {
+                      print('Image tapped');
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => UserProfileScreen()));
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Image.asset(
+                        'assets/pro.png',
+                        width: 50.0,
+                        height: 50.0,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ],
