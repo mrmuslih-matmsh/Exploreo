@@ -1,4 +1,5 @@
 import 'package:exploreo/Screens/notification_screen.dart';
+import 'package:exploreo/Screens/profile.dart';
 import 'package:exploreo/Screens/view_all.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -118,11 +119,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(width: 10.0),
                   GestureDetector(
                     onTap: () {
-                      print('Image tapped');
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => UserProfileScreen()));
+                              builder: (context) => ProfileScreen()));
                     },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10.0),

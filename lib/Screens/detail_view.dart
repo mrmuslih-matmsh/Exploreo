@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exploreo/Components/color.dart';
+import 'package:exploreo/Screens/user_profile_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -337,11 +338,24 @@ class _DetailViewState extends State<DetailView> {
                               Row(
                                 children: [
                                   ClipOval(
-                                    child: Image.network(
-                                      userData['profile'] ?? '',
-                                      width: 50,
-                                      height: 50,
-                                      fit: BoxFit.cover,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                UserProfileScreen(
+                                                    userEmail:
+                                                        userData['email']),
+                                          ),
+                                        );
+                                      },
+                                      child: Image.network(
+                                        userData['profile'] ?? '',
+                                        width: 50,
+                                        height: 50,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(width: 10),

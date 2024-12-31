@@ -1,173 +1,251 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:exploreo/Screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:exploreo/Components/color.dart';
 
+import 'detail_view.dart';
+
 class UserProfileScreen extends StatefulWidget {
-  const UserProfileScreen({super.key});
+  final String userEmail;
+
+  const UserProfileScreen({super.key, required this.userEmail});
 
   @override
   State<UserProfileScreen> createState() => _UserProfileScreenState();
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  String _userName = '';
-  String _userEmail = '';
-  String _userImageUrl = '';
-  String _errorMessage = '';
+  String? userName;
+  String? userLocation;
+  String? profileImage;
+  bool isLoading = true;
+  List<Map<String, dynamic>> recentPosts = [];
 
   @override
   void initState() {
     super.initState();
-    _fetchUserData();
+    _loadUserProfile();
   }
 
-  // Fetch user data from Firestore
-  Future<void> _fetchUserData() async {
+  Future<void> _loadUserProfile() async {
     try {
-      // Assuming the email is passed as an argument or retrieved from local storage
-      final String email = 'user@example.com'; // Replace with actual email
-
-      final querySnapshot = await _firestore
+      final userDoc = await FirebaseFirestore.instance
           .collection('users')
-          .where('email', isEqualTo: email)
+          .doc(widget.userEmail)
           .get();
 
-      if (querySnapshot.docs.isNotEmpty) {
-        final userDoc = querySnapshot.docs.first.data() as Map<String, dynamic>;
-
+      if (userDoc.exists) {
         setState(() {
-          _userName = userDoc['name'];
-          _userEmail = userDoc['email'];
-          _userImageUrl =
-              userDoc['profileImageUrl'] ?? ''; // Handle if no profile image
-        });
-      } else {
-        setState(() {
-          _errorMessage = 'User data not found';
+          userName = userDoc['name'];
+          userLocation = userDoc['location'];
+          profileImage = userDoc['profile'];
         });
       }
+
+      final postsSnapshot = await FirebaseFirestore.instance
+          .collection('posts')
+          .where('posted_by', isEqualTo: widget.userEmail)
+          .get();
+
+      setState(() {
+        recentPosts = postsSnapshot.docs
+            .map((doc) => doc.data() as Map<String, dynamic>)
+            .toList();
+        isLoading = false;
+      });
     } catch (e) {
       setState(() {
-        _errorMessage = 'An error occurred. Please try again later.';
+        isLoading = false;
       });
+      debugPrint("Error loading user profile: $e");
     }
-  }
-
-  // Log out function
-  void _logout() {
-    // Perform logout functionality, e.g., clear local storage or token
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
-    );
-  }
-
-  // Action options for the user
-  void _showMoreActions() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return ListView(
-          children: [
-            ListTile(
-              title: const Text('Edit Profile'),
-              onTap: () {
-                // Implement profile editing functionality here
-              },
-            ),
-            ListTile(
-              title: const Text('Change Password'),
-              onTap: () {
-                // Implement change password functionality here
-              },
-            ),
-            ListTile(
-              title: const Text('Settings'),
-              onTap: () {
-                // Implement settings functionality here
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: primaryColor,
       appBar: AppBar(
-        title:
-            const Text('User Profile', style: TextStyle(color: Colors.black)),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            // Display Profile Picture
-            CircleAvatar(
-              radius: 50.0,
-              backgroundImage: _userImageUrl.isEmpty
-                  ? const AssetImage('assets/default_profile.png')
-                      as ImageProvider
-                  : NetworkImage(_userImageUrl),
-              backgroundColor: Colors.grey[200],
-            ),
-            const SizedBox(height: 16),
-
-            // Display User Name
-            Text(
-              _userName.isEmpty ? 'Loading...' : _userName,
-              style:
-                  const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-
-            // Display User Email
-            Text(
-              _userEmail.isEmpty ? 'Loading...' : _userEmail,
-              style: const TextStyle(fontSize: 16.0, color: Colors.grey),
-            ),
-            const SizedBox(height: 24),
-
-            // Display Error Message if any
-            if (_errorMessage.isNotEmpty)
-              Text(
-                _errorMessage,
-                style: const TextStyle(color: Colors.red),
-              ),
-
-            const SizedBox(height: 24),
-
-            // Action buttons
-            ElevatedButton(
-              onPressed: _logout,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primaryColor,
-                minimumSize: const Size.fromHeight(50),
-              ),
-              child: const Text('Logout'),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _showMoreActions,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-                minimumSize: const Size.fromHeight(50),
-              ),
-              child: const Text('More Actions'),
-            ),
-          ],
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
+        title: const Text(
+          'User Profile',
+          style: TextStyle(
+            fontSize: 18,
+            fontFamily: 'PoppinsSemiBold',
+            color: Colors.black,
+          ),
+        ),
+        backgroundColor: primaryColor,
       ),
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(secondaryColor),
+              ),
+            )
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 40,
+                        backgroundImage: profileImage != null
+                            ? NetworkImage(profileImage!)
+                            : const AssetImage('assets/exploreo_icon_bg.png')
+                                as ImageProvider,
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              userName ?? 'No Name',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontFamily: 'PoppinsMedium',
+                              ),
+                            ),
+                            Text(
+                              userLocation ?? 'No Location',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey,
+                                fontFamily: 'PoppinsRegular',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 40),
+                  const Text(
+                    "Recent Posts",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'PoppinsMedium',
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  recentPosts.isEmpty
+                      ? const Text(
+                          "No recent posts available.",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black54,
+                          ),
+                        )
+                      : GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.8,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                          ),
+                          itemCount: recentPosts.length,
+                          itemBuilder: (context, index) {
+                            final post = recentPosts[index];
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => DetailView(
+                                      postid: post['postid'],
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(15),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: const BorderRadius.vertical(
+                                        top: Radius.circular(15),
+                                      ),
+                                      child: Image.network(
+                                        post['coverimage'],
+                                        height:
+                                            MediaQuery.of(context).size.width *
+                                                0.3,
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            post['title'] ?? 'No Title',
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontFamily: 'PoppinsMedium',
+                                              color: Colors.black,
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.location_on,
+                                                color: Colors.red,
+                                                size: 14,
+                                              ),
+                                              const SizedBox(width: 4),
+                                              Expanded(
+                                                child: Text(
+                                                  post['location'] ??
+                                                      'No Location',
+                                                  style: const TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.grey,
+                                                    fontFamily: 'PoppinsMedium',
+                                                  ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                ],
+              ),
+            ),
     );
   }
 }

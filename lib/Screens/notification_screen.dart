@@ -76,8 +76,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  elevation: 4,
-                  shadowColor: Colors.black.withOpacity(0.1),
+                  elevation: 2,
+                  shadowColor: Colors.grey,
                   color: Colors.white,
                   child: ListTile(
                     contentPadding: const EdgeInsets.symmetric(
