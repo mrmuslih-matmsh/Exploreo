@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:exploreo/Screens/edit_profile_screen.dart';
 import 'package:exploreo/Components/color.dart';
+import 'package:exploreo/Screens/my_posts_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -190,7 +191,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           icon: Icons.post_add,
                           label: 'My Posts',
                           onPressed: () {
-                            // Navigate to My Posts Screen
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const MyPostsScreen(),
+                              ),
+                            );
                           },
                         ),
                         _buildProfileButton(
