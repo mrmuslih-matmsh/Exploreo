@@ -61,7 +61,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               final title = notification['title'] ?? 'No title';
               final message = notification['message'] ?? 'No message';
               final timestamp =
-                  notification['timestamp']?.toDate() ?? DateTime.now();
+                  notification['timestamp'] ?? DateTime.now();
 
               return Card(
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -83,7 +83,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     ),
                   ),
                   subtitle: Text(
-                    '$message\n${timestamp.toLocal()}',
+                    '$message\n${timestamp}',
                     style: const TextStyle(color: Colors.black54),
                   ),
                   isThreeLine: true,
