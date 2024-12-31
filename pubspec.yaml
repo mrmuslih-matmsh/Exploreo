@@ -33,6 +33,7 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   shared_preferences: ^2.3.4
   http: ^1.2.2
+  intl: ^0.20.1
 
 dev_dependencies:
   flutter_test:

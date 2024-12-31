@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class NewPostScreen extends StatefulWidget {
   const NewPostScreen({super.key});
@@ -38,7 +39,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
   Future<void> _fetchCurrentUser() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _currentUserEmail = prefs.getString('currentUser');
+      _currentUserEmail = prefs.getString('email');
     });
   }
 
@@ -127,7 +128,10 @@ class _NewPostScreenState extends State<NewPostScreen> {
       final List<String> galleryImageUrls =
           await _uploadMultipleImagesToCloudinary(_galleryImages);
 
-      // Prepare post details
+      // Get the current date without time
+      String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+      // Prepare post details with a timestamp and postid
       Map<String, dynamic> postDetails = {
         "category": _selectedCategory,
         "coverimage": coverImageUrl,
@@ -135,15 +139,22 @@ class _NewPostScreenState extends State<NewPostScreen> {
         "images": galleryImageUrls,
         "location": _locationController.text,
         "posted_by": _currentUserEmail ?? "anonymous",
-        "postid": "p${DateTime.now().millisecondsSinceEpoch}",
         "price": _priceController.text,
         "rating": 0.0,
-        "timestamp": FieldValue.serverTimestamp(),
+        "timestamp": formattedDate,
         "title": _titleController.text,
       };
 
-      // Save to Firestore
-      await FirebaseFirestore.instance.collection('posts').add(postDetails);
+      // Save to Firestore and retrieve the document reference
+      DocumentReference postRef =
+          await FirebaseFirestore.instance.collection('posts').add(postDetails);
+
+      String postid = postRef.id;
+
+      // Update the post with the postid (set it to match the document id)
+      await postRef.update({
+        "postid": postid,
+      });
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Post added successfully!')),
