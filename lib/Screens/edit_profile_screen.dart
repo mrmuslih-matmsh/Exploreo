@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:exploreo/Components/color.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,7 +15,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final _nameController = TextEditingController();
   final _mobileController = TextEditingController();
   final _locationController = TextEditingController();
-  String? _email; // To store the unique email identifier
+  String? _email;
+  bool _isLoading = false; // Loading state flag
 
   @override
   void initState() {
@@ -25,7 +27,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> _loadProfileData() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _email = prefs.getString('email'); // Fetch the email
+      _email = prefs.getString('email');
       _nameController.text = prefs.getString('name') ?? '';
       _mobileController.text = prefs.getString('mobile') ?? '';
       _locationController.text = prefs.getString('location') ?? '';
@@ -34,6 +36,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> _updateProfile() async {
     if (_formKey.currentState!.validate()) {
+      // Check if any field is empty before proceeding
+      if (_nameController.text.isEmpty ||
+          _mobileController.text.isEmpty ||
+          _locationController.text.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please fill in all fields')),
+        );
+        return; // Exit if any field is empty
+      }
+
+      setState(() {
+        _isLoading = true; // Start loading
+      });
+
       final prefs = await SharedPreferences.getInstance();
 
       // Update SharedPreferences
@@ -52,6 +68,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         }, SetOptions(merge: true));
       }
 
+      setState(() {
+        _isLoading = false; // Stop loading
+      });
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Profile updated successfully')),
       );
@@ -69,12 +89,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: primaryColor,
       appBar: AppBar(
-        title:
-            const Text('Edit Profile', style: TextStyle(color: Colors.black)),
-        centerTitle: true,
-        backgroundColor: Colors.white,
+        title: const Text(
+          'Edit Profile',
+          style: TextStyle(
+            fontSize: 18,
+            fontFamily: 'PoppinsSemiBold',
+            color: Colors.black,
+          ),
+        ),
+        backgroundColor: primaryColor,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
       ),
@@ -84,9 +109,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           key: _formKey,
           child: ListView(
             children: [
+              const SizedBox(height: 10),
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Name'),
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                  labelStyle: TextStyle(
+                    fontFamily: 'PoppinsRegular',
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
+                  hintText: 'Enter your name',
+                  hintStyle: TextStyle(
+                    fontFamily: 'PoppinsRegular',
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey.shade300,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your name';
@@ -94,9 +139,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   return null;
                 },
               ),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _mobileController,
-                decoration: const InputDecoration(labelText: 'Mobile Number'),
+                decoration: InputDecoration(
+                  labelText: 'Mobile Number',
+                  labelStyle: TextStyle(
+                    fontFamily: 'PoppinsRegular',
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
+                  hintText: 'Enter your mobile number',
+                  hintStyle: TextStyle(
+                    fontFamily: 'PoppinsRegular',
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey.shade300,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your mobile number';
@@ -104,9 +169,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   return null;
                 },
               ),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _locationController,
-                decoration: const InputDecoration(labelText: 'Location'),
+                decoration: InputDecoration(
+                  labelText: 'Location',
+                  labelStyle: TextStyle(
+                    fontFamily: 'PoppinsRegular',
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
+                  hintText: 'Enter your location',
+                  hintStyle: TextStyle(
+                    fontFamily: 'PoppinsRegular',
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey.shade300,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your location';
@@ -114,10 +199,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   return null;
                 },
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 40),
               ElevatedButton(
-                onPressed: _updateProfile,
-                child: const Text('Update Profile'),
+                onPressed: _isLoading ? null : _updateProfile,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: secondaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  minimumSize: Size(double.infinity, 50),
+                ),
+                child: _isLoading
+                    ? CircularProgressIndicator(
+                        color: secondaryColor,
+                      )
+                    : Text(
+                        'Update Profile',
+                        style: TextStyle(
+                          fontFamily: 'PoppinsMedium',
+                          fontSize: 14,
+                          color: Colors.white,
+                        ),
+                      ),
               ),
             ],
           ),
