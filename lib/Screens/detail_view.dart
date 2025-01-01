@@ -522,8 +522,12 @@ class _DetailViewState extends State<DetailView> {
                                           onPressed: () {
                                             Navigator.of(context).push(
                                               MaterialPageRoute(
-                                                builder: (context) => ChatScreen(
-                                                  useremail: userData['email'],
+                                                builder: (context) =>
+                                                    ChatScreen(
+                                                  receiverEmail:
+                                                      userData['email'],
+                                                  receiverName:
+                                                      userData['name'],
                                                 ),
                                               ),
                                             );
