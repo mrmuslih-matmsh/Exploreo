@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import '../Database/bookmark.dart';
+import 'chat_screen.dart';
 
 class DetailView extends StatefulWidget {
   final String postid;
@@ -519,7 +520,13 @@ class _DetailViewState extends State<DetailView> {
                                           icon: const Icon(Icons.chat),
                                           color: Colors.white,
                                           onPressed: () {
-                                            // Chat functionality
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) => ChatScreen(
+                                                  useremail: userData['email'],
+                                                ),
+                                              ),
+                                            );
                                           },
                                         ),
                                       ),

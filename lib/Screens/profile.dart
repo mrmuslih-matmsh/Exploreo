@@ -176,18 +176,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           },
                         ),
                         _buildProfileButton(
-                          icon: Icons.chat,
-                          label: 'Chat',
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ChatScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                        _buildProfileButton(
                           icon: Icons.lock,
                           label: 'Change Password',
                           onPressed: () {
@@ -211,6 +199,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           label: 'Settings',
                           onPressed: () {
                             // Navigate to Settings Screen
+                          },
+                        ),
+                        _buildProfileButton(
+                          icon: Icons.info_outline_rounded,
+                          label: 'About',
+                          onPressed: () {
+                            // Navigate to Change Password Screen
                           },
                         ),
                         _buildProfileButton(
