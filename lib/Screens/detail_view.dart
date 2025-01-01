@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
+import '../Database/bookmark.dart';
+
 class DetailView extends StatefulWidget {
   final String postid;
   const DetailView({super.key, required this.postid});
@@ -15,6 +17,123 @@ class DetailView extends StatefulWidget {
 
 class _DetailViewState extends State<DetailView> {
   double _rating = 0;
+  bool isBookmarked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkBookmark();
+  }
+
+  Future<void> _checkBookmark() async {
+    final bookmarked =
+        await BookmarkDatabase.instance.isBookmarked(widget.postid);
+    setState(() {
+      isBookmarked = bookmarked;
+    });
+  }
+
+  Future<void> _toggleBookmark() async {
+    if (isBookmarked) {
+      // Remove bookmark
+      await BookmarkDatabase.instance.removeBookmark(widget.postid);
+
+      // Show dialog for bookmark removal
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text(
+              'Bookmark Removed',
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: 'PoppinsMedium',
+              ),
+            ),
+            content: const Text(
+              'The post has been removed from your bookmarks.',
+              style: const TextStyle(
+                fontSize: 14.0,
+                color: Colors.black,
+                fontFamily: 'PoppinsRegular',
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      try {
+        // Fetch post data from Firestore
+        final postSnapshot = await FirebaseFirestore.instance
+            .collection('posts')
+            .doc(widget.postid)
+            .get();
+
+        if (postSnapshot.exists) {
+          final postData = postSnapshot.data()!;
+          await BookmarkDatabase.instance.addBookmark({
+            'postid': widget.postid,
+            'coverImage': postData['coverimage'] ?? '',
+            'title': postData['title'] ?? '',
+            'location': postData['location'] ?? '',
+          });
+
+          // Show dialog for bookmark added
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text(
+                  'Bookmark Added',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'PoppinsMedium',
+                  ),
+                ),
+                content: const Text(
+                  'The post has been added to your bookmarks.',
+                  style: const TextStyle(
+                    fontSize: 14.0,
+                    color: Colors.black,
+                    fontFamily: 'PoppinsRegular',
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+        } else {
+          // Handle case where post data doesn't exist
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Post data not found.')),
+          );
+          return;
+        }
+      } catch (e) {
+        // Handle any errors during Firestore fetch
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to fetch post data.')),
+        );
+        return;
+      }
+    }
+
+    // Update the UI
+    setState(() {
+      isBookmarked = !isBookmarked;
+    });
+  }
 
   // Fetching post data from Firestore
   Future<DocumentSnapshot> getPostData() async {
@@ -160,7 +279,10 @@ class _DetailViewState extends State<DetailView> {
             future: getUserData(userEmail),
             builder: (context, userSnapshot) {
               if (userSnapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(
+                    child: CircularProgressIndicator(
+                  color: secondaryColor,
+                ));
               }
 
               if (!userSnapshot.hasData || userSnapshot.data == null) {
@@ -734,18 +856,31 @@ class _DetailViewState extends State<DetailView> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(10)),
-                                      border: Border.all(
-                                        color: secondaryColor,
+                                  GestureDetector(
+                                    onTap:
+                                        _toggleBookmark, // Handles the onPressed action
+                                    child: Container(
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        borderRadius: const BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
+                                        border: Border.all(
+                                          color: secondaryColor,
+                                        ),
                                       ),
-                                    ),
-                                    child: const Icon(
-                                      Icons.favorite_border,
-                                      color: secondaryColor,
+                                      child: Center(
+                                        // Ensures the icon is centered
+                                        child: Icon(
+                                          isBookmarked
+                                              ? Icons.favorite
+                                              : Icons.favorite_border,
+                                          color: isBookmarked
+                                              ? Colors.red
+                                              : Colors.red,
+                                          size: 30,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(width: 10),
@@ -754,6 +889,7 @@ class _DetailViewState extends State<DetailView> {
                                       onTap: () =>
                                           _launchMaps(postData['location']),
                                       child: Container(
+                                        height: 50,
                                         padding: const EdgeInsets.all(9),
                                         decoration: BoxDecoration(
                                           color: secondaryColor,

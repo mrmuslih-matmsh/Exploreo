@@ -91,7 +91,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Profile', style: TextStyle(color: Colors.black)),
+        title: const Text(
+          'Profile',
+          style: TextStyle(
+            fontSize: 18,
+            fontFamily: 'PoppinsSemiBold',
+            color: Colors.black,
+          ),
+        ),
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
@@ -131,14 +138,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Text(
                                 userName!,
                                 style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
+                                    fontSize: 16,
+                                    fontFamily: 'PoppinsMedium',
+                                    color: Colors.black),
                               ),
                               Text(
                                 userEmail!,
-                                style: const TextStyle(color: Colors.black54),
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey,
+                                  fontFamily: 'PoppinsRegular',
+                                ),
                               ),
                             ],
                           ),
