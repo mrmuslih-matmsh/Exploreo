@@ -48,7 +48,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
       setState(() {
         recentPosts = postsSnapshot.docs
-            .map((doc) => doc.data() as Map<String, dynamic>)
+            .map((doc) => doc.data())
             .toList();
         isLoading = false;
       });

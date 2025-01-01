@@ -113,7 +113,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     trailing: Padding(
                       padding: const EdgeInsets.only(top: 6.0),
                       child: Text(
-                        '${timestamp}',
+                        '$timestamp',
                         style: const TextStyle(
                           fontSize: 12,
                           color: Colors.grey,

@@ -1,4 +1,3 @@
-import 'package:exploreo/Screens/user_profile_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:exploreo/Screens/splash.dart';
 import 'package:flutter/services.dart';

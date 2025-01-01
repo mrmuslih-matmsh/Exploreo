@@ -124,7 +124,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                     children: [
                       Text(
                         post.location,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 14,
                           color: Colors.grey,
                           fontFamily: 'PoppinsRegular',

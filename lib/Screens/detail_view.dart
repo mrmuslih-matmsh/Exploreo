@@ -313,10 +313,10 @@ class _DetailViewState extends State<DetailView> {
                           );
                         },
                         child: FittedBox(
+                          fit: BoxFit.cover,
                           child: Image.network(
                             postData['coverimage'] ?? '',
                           ),
-                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
@@ -393,7 +393,7 @@ class _DetailViewState extends State<DetailView> {
                                       const SizedBox(width: 5),
                                       Text(
                                         '${postData['location']}',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           color: Colors.grey,
                                           fontFamily: 'PoppinsRegular',
                                           fontSize: 14,
@@ -669,7 +669,7 @@ class _DetailViewState extends State<DetailView> {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               10),
-                                                      borderSide: BorderSide(
+                                                      borderSide: const BorderSide(
                                                         color: secondaryColor,
                                                         width: 1.5,
                                                       ),
@@ -717,7 +717,7 @@ class _DetailViewState extends State<DetailView> {
                                         },
                                       );
                                     },
-                                    child: Text(
+                                    child: const Text(
                                       'Add Review',
                                       style: TextStyle(
                                         color:
@@ -902,9 +902,9 @@ class _DetailViewState extends State<DetailView> {
                                       child: Container(
                                         height: 50,
                                         padding: const EdgeInsets.all(9),
-                                        decoration: BoxDecoration(
+                                        decoration: const BoxDecoration(
                                           color: secondaryColor,
-                                          borderRadius: const BorderRadius.all(
+                                          borderRadius: BorderRadius.all(
                                               Radius.circular(10)),
                                         ),
                                         child: const Center(

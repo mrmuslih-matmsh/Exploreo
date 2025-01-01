@@ -114,13 +114,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 controller: _nameController,
                 decoration: InputDecoration(
                   labelText: 'Name',
-                  labelStyle: TextStyle(
+                  labelStyle: const TextStyle(
                     fontFamily: 'PoppinsRegular',
                     fontSize: 14,
                     color: Colors.black,
                   ),
                   hintText: 'Enter your name',
-                  hintStyle: TextStyle(
+                  hintStyle: const TextStyle(
                     fontFamily: 'PoppinsRegular',
                     fontSize: 14,
                     color: Colors.grey,
@@ -144,13 +144,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 controller: _mobileController,
                 decoration: InputDecoration(
                   labelText: 'Mobile Number',
-                  labelStyle: TextStyle(
+                  labelStyle: const TextStyle(
                     fontFamily: 'PoppinsRegular',
                     fontSize: 14,
                     color: Colors.black,
                   ),
                   hintText: 'Enter your mobile number',
-                  hintStyle: TextStyle(
+                  hintStyle: const TextStyle(
                     fontFamily: 'PoppinsRegular',
                     fontSize: 14,
                     color: Colors.grey,
@@ -174,13 +174,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 controller: _locationController,
                 decoration: InputDecoration(
                   labelText: 'Location',
-                  labelStyle: TextStyle(
+                  labelStyle: const TextStyle(
                     fontFamily: 'PoppinsRegular',
                     fontSize: 14,
                     color: Colors.black,
                   ),
                   hintText: 'Enter your location',
-                  hintStyle: TextStyle(
+                  hintStyle: const TextStyle(
                     fontFamily: 'PoppinsRegular',
                     fontSize: 14,
                     color: Colors.grey,
@@ -207,13 +207,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  minimumSize: Size(double.infinity, 50),
+                  minimumSize: const Size(double.infinity, 50),
                 ),
                 child: _isLoading
-                    ? CircularProgressIndicator(
+                    ? const CircularProgressIndicator(
                         color: secondaryColor,
                       )
-                    : Text(
+                    : const Text(
                         'Update Profile',
                         style: TextStyle(
                           fontFamily: 'PoppinsMedium',

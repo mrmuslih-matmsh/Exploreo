@@ -24,8 +24,8 @@ class ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     _loadUserEmail();
-    _loadMessagesFromLocal(); // Load messages from local storage
-    _loadMessagesFromFirestore(); // Load messages from Firestore
+    _loadMessagesFromLocal();
+    _loadMessagesFromFirestore();
   }
 
   // Fetch the current user's email from SharedPreferences
@@ -162,17 +162,23 @@ class ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: primaryColor,
       appBar: AppBar(
         backgroundColor: secondaryColor,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back,
-              color: Colors.white), // Set the back icon color to white
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.pop(context); // Navigate back
           },
         ), // Custom appBar color
-        title: Text(widget.receiverName,
-            style: const TextStyle(fontSize: 20, color: Colors.white)),
+        title: Text(
+          widget.receiverName,
+          style: const TextStyle(
+            fontSize: 18,
+            fontFamily: 'PoppinsMedium',
+            color: Colors.white,
+          ),
+        ),
         actions: [
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert, color: Colors.white),
@@ -215,7 +221,8 @@ class ChatScreenState extends State<ChatScreen> {
                         message['message'],
                         style: TextStyle(
                           color: isSender ? Colors.white : Colors.black,
-                          fontSize: 16,
+                          fontSize: 14,
+                          fontFamily: 'PoppinsRegular',
                         ),
                       ),
                     ),
@@ -233,7 +240,7 @@ class ChatScreenState extends State<ChatScreen> {
                     controller: _controller,
                     decoration: InputDecoration(
                       hintText: 'Enter your message...',
-                      hintStyle: TextStyle(color: Colors.grey),
+                      hintStyle: const TextStyle(color: Colors.grey),
                       filled: true,
                       fillColor: Colors.grey.shade300,
                       border: OutlineInputBorder(

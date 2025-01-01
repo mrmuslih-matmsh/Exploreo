@@ -317,7 +317,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
                       color: Colors.grey[300],
                       border: Border.all(color: Colors.grey.shade300),
                       borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: Colors.black12,
                           offset: Offset(0, 2),
@@ -369,7 +369,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
                     decoration: BoxDecoration(
                       color: Colors.grey[300],
                       borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: Colors.black12,
                           offset: Offset(0, 2),

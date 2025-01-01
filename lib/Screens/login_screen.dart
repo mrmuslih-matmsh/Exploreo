@@ -80,14 +80,14 @@ class _LoginScreenState extends State<LoginScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Alert'),
+          title: const Text('Alert'),
           content: Text(message),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -109,13 +109,13 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 30),
-                Image(
+                const Image(
                   image: AssetImage('assets/exploreo_icon.png'),
                   width: 80.0,
                   height: 80.0,
                 ),
                 const SizedBox(height: 20),
-                Text(
+                const Text(
                   'Log In to Explore More',
                   style: TextStyle(
                     fontFamily: 'PoppinsSemiBold',
@@ -128,13 +128,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: _emailController,
                   decoration: InputDecoration(
                     labelText: 'Email Address',
-                    labelStyle: TextStyle(
+                    labelStyle: const TextStyle(
                       fontFamily: 'PoppinsRegular',
                       fontSize: 14,
                       color: Colors.black,
                     ),
                     hintText: 'user@gmail.com',
-                    hintStyle: TextStyle(
+                    hintStyle: const TextStyle(
                       fontFamily: 'PoppinsRegular',
                       fontSize: 14,
                       color: Colors.grey,
@@ -153,7 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    labelStyle: TextStyle(
+                    labelStyle: const TextStyle(
                       fontFamily: 'PoppinsRegular',
                       fontSize: 14,
                       color: Colors.black,
@@ -173,7 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       // Navigate to forgot password screen (Not implemented here)
                     },
-                    child: Text(
+                    child: const Text(
                       'Forgot Password?',
                       style: TextStyle(
                         fontFamily: 'PoppinsRegular',
@@ -192,13 +192,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    minimumSize: Size(double.infinity, 50),
+                    minimumSize: const Size(double.infinity, 50),
                   ),
                   child: _isLoading
-                      ? CircularProgressIndicator(
+                      ? const CircularProgressIndicator(
                     color: secondaryColor,
                   )
-                      : Text(
+                      : const Text(
                     'Sign In',
                     style: TextStyle(
                       fontFamily: 'PoppinsMedium',
@@ -211,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       "Don't have an account?",
                       style: TextStyle(
                         fontFamily: 'PoppinsRegular',
@@ -227,7 +227,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               builder: (context) => const SignUpScreen()),
                         );
                       },
-                      child: Text(
+                      child: const Text(
                         'Create Account',
                         style: TextStyle(
                           fontFamily: 'PoppinsMedium',

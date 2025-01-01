@@ -41,7 +41,7 @@ class MainScreenState extends State<MainScreen> {
         },
         backgroundColor: Colors.white,
         selectedItemColor: secondaryColor,
-        unselectedItemColor: logoBlackColor,
+        unselectedItemColor: Colors.black,
         selectedLabelStyle: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w600,

@@ -153,14 +153,14 @@ class _AiTipsScreenState extends State<AiTipsScreen> {
                     controller: _controller,
                     decoration: InputDecoration(
                       hintText: "Ask a travel-related question...",
-                      hintStyle: TextStyle(
+                      hintStyle: const TextStyle(
                         fontSize: 14,
                         fontFamily: 'PoppinsRegular',
                         color: Colors.grey,
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                           color: secondaryColor,
                           width: 2.0,
                         ),
@@ -168,7 +168,7 @@ class _AiTipsScreenState extends State<AiTipsScreen> {
                       contentPadding: const EdgeInsets.symmetric(
                           vertical: 12, horizontal: 20),
                     ),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       fontFamily: 'PoppinsRegular',
                       color: Colors.black,
@@ -177,10 +177,10 @@ class _AiTipsScreenState extends State<AiTipsScreen> {
                 ),
                 IconButton(
                   icon: _isLoading
-                      ? SizedBox(
+                      ? const SizedBox(
                           height: 20.0,
                           width: 20.0,
-                          child: const CircularProgressIndicator(
+                          child: CircularProgressIndicator(
                             color: secondaryColor,
                             strokeWidth: 2,
                           ),

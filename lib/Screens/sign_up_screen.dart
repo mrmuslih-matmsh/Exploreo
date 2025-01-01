@@ -155,7 +155,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 30),
-                Text(
+                const Text(
                   'Register Account',
                   style: TextStyle(
                     fontFamily: 'PoppinsSemiBold',
@@ -168,7 +168,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   controller: _userNameController,
                   decoration: InputDecoration(
                     labelText: 'Username',
-                    labelStyle: TextStyle(
+                    labelStyle: const TextStyle(
                       fontFamily: 'PoppinsRegular',
                       fontSize: 14,
                       color: Colors.black,
@@ -186,7 +186,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   controller: _emailController,
                   decoration: InputDecoration(
                     labelText: 'Email',
-                    labelStyle: TextStyle(
+                    labelStyle: const TextStyle(
                       fontFamily: 'PoppinsRegular',
                       fontSize: 14,
                       color: Colors.black,
@@ -205,7 +205,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: 'Mobile',
-                    labelStyle: TextStyle(
+                    labelStyle: const TextStyle(
                       fontFamily: 'PoppinsRegular',
                       fontSize: 14,
                       color: Colors.black,
@@ -223,7 +223,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   controller: _countryController,
                   decoration: InputDecoration(
                     labelText: 'Country',
-                    labelStyle: TextStyle(
+                    labelStyle: const TextStyle(
                       fontFamily: 'PoppinsRegular',
                       fontSize: 14,
                       color: Colors.black,
@@ -242,7 +242,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    labelStyle: TextStyle(
+                    labelStyle: const TextStyle(
                       fontFamily: 'PoppinsRegular',
                       fontSize: 14,
                       color: Colors.black,

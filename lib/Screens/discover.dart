@@ -14,7 +14,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   List<Map<String, dynamic>> _travelList = [];
   List<Map<String, dynamic>> _filteredTravelList = [];
   String _sortOption = 'a_to_z';
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -109,9 +109,9 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: const Icon(
+                  const Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Icon(
                       Icons.search,
                       size: 24,
                       color: Colors.black,
@@ -130,7 +130,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                           color: Colors.grey,
                         ),
                       ),
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
                         fontFamily: 'PoppinsRegular',
                         color: Colors.black,

@@ -9,7 +9,7 @@ import 'package:exploreo/Components/featured_card.dart';
 import 'package:exploreo/Components/explore_tour_card.dart';
 import 'package:exploreo/Components/food_card.dart';
 import 'package:exploreo/Components/skill_card.dart';
-import 'package:exploreo/Screens/user_profile_view_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,6 +19,21 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String? _userProfile;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserProfile();
+  }
+
+  Future<void> _loadUserProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _userProfile = prefs.getString('profile');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -69,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       builder: (context) => const NotificationScreen()),
                 );
               },
-              child: Icon(
+              child: const Icon(
                 Icons.notifications_none_outlined,
                 size: 26,
                 color: secondaryColor,
@@ -95,9 +110,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Expanded(
                     child: RichText(
-                      text: TextSpan(
+                      text: const TextSpan(
                         text: 'Exploreo\n',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontFamily: 'PoppinsSemiBold',
                           color: secondaryColor,
                           fontSize: 20,
@@ -116,18 +131,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 10.0),
+                  const SizedBox(width: 10.0),
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ProfileScreen()));
+                              builder: (context) => const ProfileScreen()));
                     },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10.0),
-                      child: Image.asset(
-                        'assets/pro.png',
+                      child: Image.network(
+                        '${_userProfile}',
                         width: 50.0,
                         height: 50.0,
                         fit: BoxFit.cover,
@@ -175,8 +190,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (travelData.isEmpty) {
                     return Center(
                       child: Container(
-                        margin: EdgeInsets.only(top: 18.0),
-                        child: Text('No Featured Posts Available',
+                        margin: const EdgeInsets.only(top: 18.0),
+                        child: const Text('No Featured Posts Available',
                             style: TextStyle(
                               color: Colors.grey,
                               fontSize: 14,
@@ -234,11 +249,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              ViewAllScreen(category: 'Local Tours'),
+                              const ViewAllScreen(category: 'Local Tours'),
                         ),
                       );
                     },
-                    child: Text(
+                    child: const Text(
                       'View All',
                       style: TextStyle(
                         fontSize: 14,
@@ -273,8 +288,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (exploreToursData.isEmpty) {
                     return Center(
                       child: Container(
-                        margin: EdgeInsets.only(top: 18.0),
-                        child: Text('No Explore Tours Available',
+                        margin: const EdgeInsets.only(top: 18.0),
+                        child: const Text('No Explore Tours Available',
                             style: TextStyle(
                               color: Colors.grey,
                               fontSize: 14,
@@ -332,11 +347,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              ViewAllScreen(category: 'Food Sharing'),
+                              const ViewAllScreen(category: 'Food Sharing'),
                         ),
                       );
                     },
-                    child: Text(
+                    child: const Text(
                       'View All',
                       style: TextStyle(
                         fontSize: 14,
@@ -371,8 +386,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (foodConnectData.isEmpty) {
                     return Center(
                       child: Container(
-                        margin: EdgeInsets.only(top: 18.0),
-                        child: Text('No Food Connect Posts Available',
+                        margin: const EdgeInsets.only(top: 18.0),
+                        child: const Text('No Food Connect Posts Available',
                             style: TextStyle(
                               color: Colors.grey,
                               fontSize: 14,
@@ -430,11 +445,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              ViewAllScreen(category: 'Skills Exchange'),
+                              const ViewAllScreen(category: 'Skills Exchange'),
                         ),
                       );
                     },
-                    child: Text(
+                    child: const Text(
                       'View All',
                       style: TextStyle(
                         fontSize: 14,
@@ -467,8 +482,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (skillsData.isEmpty) {
                     return Center(
                       child: Container(
-                        margin: EdgeInsets.only(top: 18.0),
-                        child: Text('No Skill Swap Posts Available',
+                        margin: const EdgeInsets.only(top: 18.0),
+                        child: const Text('No Skill Swap Posts Available',
                             style: TextStyle(
                               color: Colors.grey,
                               fontSize: 14,

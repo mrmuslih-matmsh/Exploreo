@@ -54,8 +54,8 @@ class ViewAllScreen extends StatelessWidget {
                   if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                     return Center(
                       child: Container(
-                        margin: EdgeInsets.only(top: 18.0),
-                        child: Text('No posts available',
+                        margin: const EdgeInsets.only(top: 18.0),
+                        child: const Text('No posts available',
                             style: TextStyle(
                               color: Colors.grey,
                               fontSize: 14,
