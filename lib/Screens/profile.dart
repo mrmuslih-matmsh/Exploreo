@@ -1,5 +1,5 @@
 import 'package:exploreo/Screens/bookmarks_screen.dart';
-import 'package:exploreo/Screens/chat_screen.dart';
+import 'package:exploreo/Screens/change_password.dart';
 import 'package:exploreo/Screens/my_posts_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
@@ -179,7 +179,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           icon: Icons.lock,
                           label: 'Change Password',
                           onPressed: () {
-                            // Navigate to Change Password Screen
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ChangePasswordScreen(),
+                              ),
+                            );
                           },
                         ),
                         _buildProfileButton(
