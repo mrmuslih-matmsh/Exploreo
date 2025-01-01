@@ -479,7 +479,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                   return Container(
                     margin: const EdgeInsets.only(top: 16),
-                    height: MediaQuery.of(context).size.height,
+                    height: MediaQuery.of(context).size.height * 0.3,
                     child: ListView.builder(
                       itemCount: skillsData.length,
                       physics: const BouncingScrollPhysics(),
