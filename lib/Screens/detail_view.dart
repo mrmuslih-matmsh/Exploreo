@@ -331,16 +331,19 @@ class _DetailViewState extends State<DetailView> {
                             children: [
                               // Title and rating
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    postData['title'] ?? 'Untitled',
-                                    style: const TextStyle(
+                                  Expanded(
+                                    child: Text(
+                                      postData['title'] ?? 'Untitled',
+                                      style: const TextStyle(
                                         color: Colors.black,
                                         fontSize: 22,
-                                        fontFamily: 'PoppinsSemiBold'),
+                                        fontFamily: 'PoppinsSemiBold',
+                                      ),
+                                    ),
                                   ),
+                                  const SizedBox(width: 4),
                                   Row(
                                     children: [
                                       const Icon(
@@ -351,9 +354,10 @@ class _DetailViewState extends State<DetailView> {
                                       Text(
                                         postData['rating'].toString(),
                                         style: const TextStyle(
-                                            fontSize: 16.0,
-                                            fontFamily: 'PoppinsMedium',
-                                            color: Colors.black),
+                                          fontSize: 16.0,
+                                          fontFamily: 'PoppinsMedium',
+                                          color: Colors.black,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -383,6 +387,7 @@ class _DetailViewState extends State<DetailView> {
                                       ),
                                     ],
                                   ),
+                                  const SizedBox(width: 4),
                                   Row(
                                     children: [
                                       const Icon(
@@ -403,14 +408,14 @@ class _DetailViewState extends State<DetailView> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 20),
                               // Description
                               Text(
                                 postData['description'] ??
                                     'No description available.',
                                 style: const TextStyle(
                                   color: Colors.grey,
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   fontFamily: 'PoppinsRegular',
                                 ),
                                 textAlign: TextAlign.justify,
